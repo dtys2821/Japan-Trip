@@ -1,0 +1,980 @@
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional (Seigaiha Blue, Washi White, Hanko Red, Sakura Pink) -->
+
+<!-- Application Structure Plan: 
+    1. Navigation: Fixed Bottom Tab Bar.
+    2. Header: Sticky top header with "Seigaiha" wave pattern and "Anywhere Door" concept.
+    3. Content Views:
+       - PLAN: Vertical Timeline with "Hanko" style date stamps.
+       - GUIDE: Magazine-style with paper texture backgrounds.
+       - WALLET: Dashboard with updated exchange rate (2.70).
+       - LISTS: Tabbed interface (Updated items).
+       - INFO: Grid layout.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used (except inline for patterns). NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>哆啦A梦的日本旅游百宝袋</title>
+    
+    <!-- Google Fonts: Rounded & JP style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        doraBlue: '#0093D0',
+                        doraRed: '#DD2F2F',
+                        doraYellow: '#F9CD1E',
+                        doraWhite: '#FFFFFF',
+                        doraDark: '#333333',
+                        jpSakura: '#FFDBE9', /* Sakura Pink */
+                        jpMatcha: '#C5E1A5', /* Matcha Green */
+                    },
+                    fontFamily: {
+                        sans: ['"M PLUS Rounded 1c"', '"Noto Sans SC"', '"Microsoft YaHei"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #E0F7FF;
+            -webkit-tap-highlight-color: transparent;
+            /* Subtle Pattern Background */
+            background-image: radial-gradient(#B3E5FC 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #0093D0; border-radius: 10px; }
+
+        /* Washi Paper Texture Class */
+        .bg-washi {
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* Seigaiha (Wave) Pattern for Header */
+        .bg-seigaiha {
+            background-color: #0093D0;
+            background-image: 
+                radial-gradient(circle at 50% 100%, #1FA9E0 10%, transparent 11%),
+                radial-gradient(circle at 50% 100%, #1FA9E0 20%, transparent 21%),
+                radial-gradient(circle at 50% 0%, #1FA9E0 10%, transparent 11%),
+                radial-gradient(circle at 50% 0%, #1FA9E0 20%, transparent 21%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        /* Doraemon Card Style with Washi texture */
+        .dora-card {
+            background: white;
+            border-radius: 20px;
+            border: 3px solid #0093D0;
+            box-shadow: 4px 4px 0px rgba(0, 147, 208, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        .dora-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        .dora-card > * { position: relative; z-index: 1; }
+
+        .dora-btn {
+            background-color: #0093D0;
+            color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 #005f85;
+            transition: all 0.1s;
+        }
+        .dora-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #005f85;
+        }
+
+        /* Hanko (Stamp) Style for Dates */
+        .hanko-stamp {
+            border: 2px solid #DD2F2F;
+            border-radius: 8px; /* Slightly rounded square */
+            color: #DD2F2F;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-family: 'Kosugi Maru', sans-serif;
+            box-shadow: inset 0 0 4px rgba(221, 47, 47, 0.2);
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            padding: 4px 8px;
+        }
+
+        /* Chart Container strict sizing */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 250px;
+        }
+
+        .view-section {
+            display: none;
+            padding-bottom: 100px; 
+            animation: fadeIn 0.4s ease-out;
+        }
+        .view-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .receipt-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #eee;
+        }
+        
+        /* Japanese Vertical Text Utility (Optional for decorative headers) */
+        .vertical-rl {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+    </style>
+</head>
+<body class="text-doraDark font-sans">
+
+    <!-- Header with Seigaiha Pattern -->
+    <header class="fixed top-0 w-full z-50 bg-seigaiha text-white shadow-lg rounded-b-3xl border-b-4 border-doraWhite">
+        <div class="max-w-2xl mx-auto px-4 py-4 flex justify-between items-center relative overflow-hidden">
+            <!-- Decorative Sakura -->
+            <div class="absolute top-0 right-10 opacity-20 text-4xl transform rotate-12 pointer-events-none">🌸</div>
+            <div class="absolute bottom-0 left-10 opacity-20 text-3xl transform -rotate-12 pointer-events-none">🌸</div>
+
+            <div class="flex items-center gap-3 relative z-10">
+                <div class="w-11 h-11 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-xl shadow-md">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wide">日本之旅 <span class="text-sm font-normal opacity-90">2025</span></h1>
+                    <p class="text-[10px] bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-0.5">
+                        <i class="fa-solid fa-door-open mr-1"></i>任意门开启中
+                    </p>
+                </div>
+            </div>
+            <div class="text-right text-xs relative z-10 font-bold bg-doraDark/10 px-2 py-1 rounded-lg backdrop-blur-sm border border-white/20">
+                <div><i class="fa-solid fa-calendar-check mr-1"></i>1/21 - 1/30</div>
+                <div><i class="fa-solid fa-location-dot mr-1"></i>大阪 · 京都</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-2xl mx-auto px-4 pt-24">
+
+        <!-- ==================== PLAN SECTION ==================== -->
+        <section id="plan" class="view-section active">
+            <!-- Summary Card -->
+            <div class="dora-card p-4 mb-6 border-l-8 border-doraRed flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-doraBlue mb-1">
+                        <i class="fa-solid fa-torii-gate mr-1 text-doraRed"></i> 旅程概览
+                    </h2>
+                    <p class="text-xs text-gray-500">欢迎使用您的专属旅游百宝袋！</p>
+                </div>
+                <div class="text-4xl opacity-20 transform rotate-12">🏯</div>
+            </div>
+
+            <!-- Timeline Container -->
+            <div id="timeline-container" class="space-y-5">
+                <!-- JS will populate this -->
+            </div>
+        </section>
+
+        <!-- ==================== GUIDE SECTION ==================== -->
+        <section id="guide" class="view-section">
+            <div class="mb-6 relative">
+                <h2 class="text-2xl font-bold text-doraBlue mb-2 text-center relative z-10">
+                    <span class="inline-block border-b-4 border-doraYellow px-4">深度导览手册</span>
+                </h2>
+                <p class="text-sm text-gray-500 text-center">像漫画一样有趣的景点小知识</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- USJ Map & Guide -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraBlue text-white p-3 font-bold flex justify-between items-center relative overflow-hidden">
+                        <div class="absolute right-0 top-0 text-6xl opacity-10 transform translate-x-2 -translate-y-2"><i class="fa-brands fa-fort-awesome"></i></div>
+                        <span><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>环球影城 (USJ)</span>
+                        <span class="hanko-stamp text-[10px] bg-white border-white text-doraBlue shadow-none">1月24日</span>
+                    </div>
+                    <div class="p-4 bg-washi">
+                        <p class="text-sm mb-4 leading-relaxed text-gray-700">
+                            <strong class="text-doraRed">💡 冷知识：</strong> USJ 的哈利波特园区中的湖水中倒影的霍格沃茨城堡，其实是使用了特殊的黑色染料来增加水面的反射率，让城堡看起来更深邃神秘。<br><br>
+                            <strong class="text-doraBlue">🗺️ 攻略：</strong> 建议入园后立刻打开 App 抽取“任天堂世界”的整理券。
+                        </p>
+                        <div class="w-full h-64 bg-gray-100 rounded-lg overflow-hidden relative border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=135.4286%2C34.6614%2C135.4366%2C34.6694&amp;layer=mapnik&amp;marker=34.6654%2C135.4323" style="border: 1px solid black"></iframe>
+                        </div>
+                        <div class="mt-2 text-xs text-center text-gray-400">大阪环球影城周边地图</div>
+                    </div>
+                </article>
+
+                <!-- Kiyomizu-dera Guide -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraRed text-white p-3 font-bold flex justify-between items-center relative overflow-hidden">
+                        <div class="absolute right-0 top-0 text-6xl opacity-10 transform translate-x-2"><i class="fa-solid fa-archway"></i></div>
+                        <span><i class="fa-solid fa-torii-gate mr-2"></i>清水寺 & 三年坂</span>
+                        <span class="hanko-stamp text-[10px] bg-white border-white text-doraRed shadow-none">1月28日</span>
+                    </div>
+                    <div class="p-4 bg-washi">
+                        <p class="text-sm mb-4 leading-relaxed text-gray-700">
+                            <strong>🏯 历史背景：</strong> 清水寺的“清水舞台”没有使用任何一根钉子，而是利用日本传统的“悬造”工法搭建在悬崖上。<br><br>
+                            <strong>💧 传说：</strong> 在“音羽之泷”有三道泉水，分别代表<span class="text-doraBlue font-bold">学问</span>、<span class="text-pink-500 font-bold">恋爱</span>和<span class="text-green-600 font-bold">长寿</span>，据说只能选择其中一道饮用，贪心喝三道会失效喔！
+                        </p>
+                    </div>
+                </article>
+                
+                <!-- Dotonbori Guide -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraYellow text-doraDark p-3 font-bold flex justify-between items-center">
+                        <span><i class="fa-solid fa-utensils mr-2"></i>道顿堀美食战场</span>
+                        <span class="text-xs bg-white text-doraDark px-2 py-1 rounded-full border border-doraDark">多日行程</span>
+                    </div>
+                    <div class="p-4 bg-washi">
+                        <p class="text-sm leading-relaxed text-gray-700">
+                            <strong>🏃 必看重点：</strong> 格力高（Glico）跑跑人看板已经换到第六代了！现在的看板背景是LED屏幕，会随着时间变化。<br><br>
+                            <strong>🥢 大阪烧 vs 广岛烧：</strong> 在这里吃的是“大阪烧”，特点是将所有材料混合在面糊里一起煎。别搞混啰！
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== WALLET SECTION ==================== -->
+        <section id="wallet" class="view-section">
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold text-doraBlue mb-2 text-center">百宝袋记账本</h2>
+                <p class="text-sm text-gray-500 text-center">自动换算汇率，控制预算</p>
+            </div>
+
+            <!-- Calculator -->
+            <div class="dora-card p-4 mb-6 bg-gradient-to-br from-white to-blue-50">
+                <h3 class="font-bold text-doraBlue mb-2 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-doraBlue text-white flex items-center justify-center mr-2 text-xs"><i class="fa-solid fa-calculator"></i></span>
+                    汇率计算器
+                </h3>
+                <div class="flex items-center gap-2 mb-2 bg-blue-100/50 p-2 rounded-lg">
+                    <label class="text-xs text-doraBlue font-bold">汇率 (100日元兑MYR):</label>
+                    <input type="number" id="exchangeRate" value="2.70" class="border-2 border-white shadow-sm rounded px-2 py-1 w-20 text-center text-sm font-bold text-doraRed outline-none focus:border-doraBlue" onchange="updateCalc()">
+                </div>
+                <div class="grid grid-cols-5 gap-2 items-center">
+                    <div class="col-span-2">
+                        <input type="number" id="calcInput" placeholder="日元" class="w-full border-2 border-doraBlue rounded-xl p-2 text-lg font-bold text-right focus:ring-2 focus:ring-blue-200 outline-none">
+                    </div>
+                    <div class="col-span-1 text-center text-gray-400">
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </div>
+                    <div class="col-span-2 relative">
+                        <div id="calcResult" class="w-full bg-doraYellow border-2 border-doraDark rounded-xl p-2 text-lg font-bold text-right text-doraDark shadow-[2px_2px_0px_#333]">RM 0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expense Form -->
+            <div class="dora-card p-4 mb-6">
+                <h3 class="font-bold text-doraRed mb-3 flex items-center">
+                    <i class="fa-solid fa-pen-nib mr-2"></i>新增支出
+                </h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <input type="text" id="expenseItem" placeholder="品项名称 (如: 拉面)" class="border rounded-lg p-2 w-full focus:border-doraBlue outline-none">
+                    <input type="number" id="expenseAmount" placeholder="日元金额" class="border rounded-lg p-2 w-full focus:border-doraBlue outline-none">
+                    
+                    <div class="flex items-center gap-2">
+                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border border-dashed border-gray-300 px-4 py-3 rounded-lg text-sm flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition">
+                            <i class="fa-solid fa-camera mr-1"></i> 上传收据/照片
+                        </label>
+                        <input type="file" id="expensePhoto" accept="image/*" class="hidden" onchange="handlePhotoSelect(this)">
+                        <span id="photoFileName" class="text-xs text-gray-400 truncate max-w-[100px]">未选择</span>
+                    </div>
+
+                    <button onclick="addExpense()" class="dora-btn py-3 w-full font-bold text-lg mt-2 flex items-center justify-center">
+                        <i class="fa-solid fa-check mr-2"></i> 记上一笔
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chart Visualization -->
+            <div class="dora-card p-4 mb-6">
+                <h3 class="font-bold text-doraBlue mb-2">支出分析</h3>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+
+            <!-- History List -->
+            <div class="bg-white/50 p-4 rounded-2xl border border-white/60">
+                <h3 class="font-bold text-gray-700 mb-2 flex items-center">
+                    <i class="fa-solid fa-clock-rotate-left mr-2 text-doraBlue"></i>记账记录
+                </h3>
+                <div id="expenseList" class="space-y-3">
+                    <!-- JS Populated -->
+                </div>
+                <div class="mt-4 text-right bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                    <span class="text-sm text-gray-500">总计: </span>
+                    <span id="totalJpy" class="font-bold text-lg mr-2 text-doraDark">¥0</span>
+                    <span id="totalMyr" class="font-bold text-doraRed text-xl">RM 0.00</span>
+                </div>
+                <button onclick="clearExpenses()" class="text-xs text-red-400 underline mt-4 w-full text-center">清除所有记录</button>
+            </div>
+        </section>
+
+        <!-- ==================== LISTS SECTION ==================== -->
+        <section id="lists" class="view-section">
+            <!-- Tabs -->
+            <div class="flex mb-6 bg-white rounded-full p-1 border-2 border-doraBlue/20 shadow-sm">
+                <button onclick="switchListTab('checklist')" id="tab-checklist" class="flex-1 py-2 rounded-full text-sm font-bold bg-doraBlue text-white transition-all shadow-md">行前清单</button>
+                <button onclick="switchListTab('memo')" id="tab-memo" class="flex-1 py-2 rounded-full text-sm font-bold text-gray-500 hover:bg-gray-100 transition-all">个人备忘录</button>
+            </div>
+
+            <!-- Checklist View -->
+            <div id="view-checklist">
+                <div class="dora-card p-4 bg-washi">
+                    <h3 class="font-bold text-doraBlue mb-3 flex items-center"><i class="fa-solid fa-suitcase-rolling mr-2"></i> 必备物品</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="newCheckItem" placeholder="新增物品..." class="border rounded-lg p-2 flex-1 focus:border-doraBlue outline-none">
+                        <button onclick="addCheckItem()" class="bg-doraYellow border-2 border-doraDark text-doraDark font-bold px-4 rounded-lg hover:translate-y-1 transition-transform"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <ul id="checklistContainer" class="space-y-2">
+                        <!-- JS populated -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Memo View -->
+            <div id="view-memo" class="hidden">
+                <div class="dora-card p-4 bg-washi">
+                    <h3 class="font-bold text-doraRed mb-3 flex items-center"><i class="fa-solid fa-pen-to-square mr-2"></i> 随手笔记</h3>
+                    <div class="mb-4">
+                        <textarea id="newMemoContent" rows="3" placeholder="输入文字或网址..." class="w-full border rounded-lg p-2 mb-2 focus:border-doraRed outline-none bg-yellow-50/50"></textarea>
+                        <button onclick="addMemo()" class="dora-btn py-2 w-full text-sm">新增笔记</button>
+                    </div>
+                    <div id="memoContainer" class="space-y-3">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== INFO SECTION ==================== -->
+        <section id="info" class="view-section">
+            <h2 class="text-2xl font-bold text-doraBlue mb-6 text-center relative">
+                <span class="relative z-10">旅游小帮手</span>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-3 bg-doraYellow/50 -z-0 rounded-full"></span>
+            </h2>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Weather -->
+                <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center active:scale-95 transition bg-white group hover:border-doraYellow">
+                    <i class="fa-solid fa-cloud-sun text-4xl text-doraBlue mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-bold text-doraDark">天气预报</span>
+                    <span class="text-xs text-gray-400">日本气象厅</span>
+                </a>
+
+                <!-- Emergency -->
+                <div class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center bg-red-50 border-doraRed">
+                    <i class="fa-solid fa-truck-medical text-3xl text-doraRed mb-2 animate-pulse"></i>
+                    <span class="font-bold text-doraRed">紧急电话</span>
+                    <span class="text-xs text-gray-500 font-bold">警110 / 救119</span>
+                </div>
+
+                <!-- Embassay -->
+                <a href="https://www.kln.gov.my/web/jpn_tokyo/home" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center active:scale-95 transition">
+                    <i class="fa-solid fa-building-flag text-3xl text-doraDark mb-2"></i>
+                    <span class="font-bold">办事处</span>
+                    <span class="text-xs text-gray-400">大马驻日使馆</span>
+                </a>
+
+                <!-- Hotel Info (Dynamic) -->
+                <div onclick="alert('京都花开酒店: 075-123-4567\nMinn十三: 06-123-4567')" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center cursor-pointer active:scale-95 transition hover:bg-yellow-50">
+                    <i class="fa-solid fa-hotel text-3xl text-doraYellow mb-2 drop-shadow-sm"></i>
+                    <span class="font-bold">住宿电话</span>
+                    <span class="text-xs text-gray-400">点击查看</span>
+                </div>
+            </div>
+
+            <!-- Rules Card -->
+            <div class="dora-card p-5 mt-6 border-l-8 border-gray-400">
+                <h3 class="font-bold text-doraDark mb-3 border-b pb-2 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation text-doraYellow mr-2"></i>注意事项
+                </h3>
+                <ul class="list-disc list-inside text-sm space-y-2 text-gray-600">
+                    <li>日本街道<strong>禁止边走边吃</strong>。</li>
+                    <li>搭乘电车请将手机设为静音，<strong>禁止通话</strong>。</li>
+                    <li>入境日本请勿携带<strong>肉类制品</strong>及新鲜蔬果。</li>
+                    <li>泡温泉时<strong>纹身</strong>通常需要遮盖，请先确认规定。</li>
+                    <li>结账时请将钱放入<strong>托盘</strong>，不要直接手递手。</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-2 px-2 shadow-[0_-5px_15px_rgba(0,0,0,0.08)] z-50 rounded-t-3xl">
+        <div class="max-w-2xl mx-auto flex justify-around items-center h-16">
+            <button onclick="switchView('plan')" class="nav-btn active flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="plan">
+                <i class="fa-solid fa-calendar-days text-xl mb-1"></i>
+                <span class="text-[10px] font-bold">行程</span>
+            </button>
+            <button onclick="switchView('guide')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="guide">
+                <i class="fa-solid fa-book-open text-xl mb-1"></i>
+                <span class="text-[10px] font-bold">导览</span>
+            </button>
+            
+            <!-- Center Button (Wallet) -->
+            <button onclick="switchView('wallet')" class="nav-btn relative -top-6 bg-doraBlue text-white rounded-full w-16 h-16 flex items-center justify-center border-4 border-white shadow-xl transform transition active:scale-95 active:rotate-12" data-target="wallet">
+                <i class="fa-solid fa-wallet text-2xl"></i>
+            </button>
+
+            <button onclick="switchView('lists')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="lists">
+                <i class="fa-solid fa-list-check text-xl mb-1"></i>
+                <span class="text-[10px] font-bold">清单</span>
+            </button>
+            <button onclick="switchView('info')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="info">
+                <i class="fa-solid fa-circle-info text-xl mb-1"></i>
+                <span class="text-[10px] font-bold">资讯</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hidden Canvas for Image Processing -->
+    <canvas id="imgCanvas" style="display: none;"></canvas>
+
+    <script>
+        // --- DATA & STATE ---
+        const tripData = [
+            { date: "1/21", day: "日", title: "抵达 & 大阪城", hotel: "大阪 Minn 十三", color: "border-doraBlue", events: [
+                { time: "AM", text: "抵达关西机场，前往 Minn 十三 寄行李", type: "move" },
+                { time: "中午", text: "大阪城公园 & 天守阁午餐", type: "spot", link: "大阪城天守阁" },
+                { time: "傍晚", text: "道顿堀逛街 & 格力高看板", type: "spot", link: "Dotonbori Glico Sign" },
+                { time: "晚餐", text: "章鱼烧、大阪烧", type: "food" }
+            ]},
+            { date: "1/22", day: "一", title: "奈良小鹿 & 温泉", hotel: "大阪 Minn 十三", color: "border-green-500", events: [
+                { time: "上午", text: "前往奈良公园、东大寺 (喂小鹿)", type: "spot", link: "Nara Park" },
+                { time: "傍晚", text: "前往弁天町 空庭温泉", type: "relax", link: "Solaniwa Onsen" },
+                { time: "晚上", text: "温泉内晚餐", type: "food" }
+            ]},
+            { date: "1/23", day: "二", title: "黑门市场 & 购物", hotel: "大阪 Minn 十三", color: "border-doraYellow", events: [
+                { time: "早午", text: "黑门市场吃海鲜", type: "food", link: "Kuromon Ichiba Market" },
+                { time: "午餐", text: "一兰拉面 (道顿堀)", type: "food" },
+                { time: "下午", text: "心斋桥、难波购物狂欢", type: "shop", link: "Shinsaibashi-Suji Shopping Street" }
+            ]},
+            { date: "1/24", day: "三", title: "USJ 环球影城", hotel: "大阪 Minn 十三", color: "border-purple-500", events: [
+                { time: "全天", text: "日本环球影城 USJ", type: "play", link: "Universal Studios Japan" },
+                { time: "注意", text: "记得抽任天堂整理券", type: "warn" }
+            ]},
+            { date: "1/25", day: "四", title: "新世界 & 高空夜景", hotel: "大阪 Minn 十三", color: "border-orange-500", events: [
+                { time: "中午", text: "新世界 & 通天阁 (吃炸串)", type: "spot", link: "Tsutenkaku" },
+                { time: "傍晚", text: "阿倍野 HARUKAS 300 展望台", type: "spot", link: "Harukas 300" },
+                { time: "晚上", text: "整理行李 (明天大移动)", type: "warn" }
+            ]},
+            { date: "1/26", day: "五", title: "移动日 & 滑雪", hotel: "神锅高原住宿", color: "border-blue-300", events: [
+                { time: "上午", text: "退房 -> JR大阪站 -> 兵库北部", type: "move" },
+                { time: "下午", text: "神锅高原滑雪体验", type: "play", link: "Kannabe Highlands" },
+                { time: "晚上", text: "住宿晚餐 & 泡澡", type: "relax" }
+            ]},
+            { date: "1/27", day: "六", title: "移动至京都 & 鸭川", hotel: "京都花开酒店", color: "border-pink-500", events: [
+                { time: "上午", text: "返回 JR 站 -> 京都站", type: "move" },
+                { time: "下午", text: "三十三间堂 (国宝)", type: "spot", link: "Sanjusangendo Temple" },
+                { time: "晚上", text: "先斗町晚餐 & 鸭川散步", type: "food", link: "Pontocho Park" }
+            ]},
+            { date: "1/28", day: "日", title: "和服体验 & 清水寺", hotel: "京都花开酒店", color: "border-red-400", events: [
+                { time: "上午", text: "祇园和服店 (预约)", type: "spot" },
+                { time: "路线", text: "八坂神社 -> 二年坂 -> 清水寺", type: "walk", link: "Kiyomizu-dera" },
+                { time: "晚上", text: "花见小路逛街", type: "spot" }
+            ]},
+            { date: "1/29", day: "一", title: "岚山 & 机场饭店", hotel: "关西机场奥德西斯", color: "border-teal-500", events: [
+                { time: "上午", text: "退房寄行李 -> JR嵯峨野线 -> 岚山", type: "move" },
+                { time: "景点", text: "竹林小径、天龙寺、渡月桥", type: "spot", link: "Arashiyama Bamboo Grove" },
+                { time: "下午", text: "回京都取行李 -> Haruka -> 临空城", type: "move" },
+                { time: "晚上", text: "临空城 Outlet & Trial 超市", type: "shop" }
+            ]},
+            { date: "1/30", day: "二", title: "返程", hotel: "温暖的家", color: "border-gray-400", events: [
+                { time: "早晨", text: "前往关西机场报到", type: "move" },
+                { time: "航班", text: "飞往温暖的家", type: "fly" }
+            ]}
+        ];
+
+        // Default Checklist (Updated: Removed Sim/Roaming and Toothbrush)
+        const defaultChecklist = [
+            { text: "护照 & 机票凭证", done: false },
+            { text: "Visit Japan Web 填写", done: false },
+            { text: "日元现金 & 信用卡", done: false },
+            { text: "充电宝 & 充电线", done: false },
+            { text: "保暖衣物 (发热衣)", done: false },
+            { text: "个人药品", done: false }
+        ];
+
+        // --- DOM ELEMENTS & INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTimeline();
+            initWallet();
+            initLists();
+            switchView('plan'); // Start on Plan
+        });
+
+        // --- VIEW SWITCHING ---
+        function switchView(viewId) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show target
+            document.getElementById(viewId).classList.add('active');
+            
+            // Update Nav styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.target === viewId) {
+                    btn.classList.add('text-doraBlue');
+                    btn.classList.remove('text-gray-400');
+                    // Add bounce animation
+                    btn.querySelector('i').classList.add('animate-bounce');
+                    setTimeout(() => btn.querySelector('i').classList.remove('animate-bounce'), 1000);
+                } else {
+                    btn.classList.remove('text-doraBlue');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+
+            window.scrollTo(0,0);
+        }
+
+        // --- PLAN RENDER LOGIC ---
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            let html = '';
+
+            tripData.forEach(day => {
+                let eventsHtml = '';
+                day.events.forEach(evt => {
+                    let icon = 'fa-circle-small';
+                    let colorClass = 'text-gray-500';
+                    let linkHtml = '';
+
+                    if(evt.type === 'move') { icon = 'fa-train-subway'; colorClass = 'text-doraBlue'; }
+                    if(evt.type === 'spot') { icon = 'fa-camera'; colorClass = 'text-doraRed'; }
+                    if(evt.type === 'food') { icon = 'fa-utensils'; colorClass = 'text-orange-500'; }
+                    if(evt.type === 'shop') { icon = 'fa-bag-shopping'; colorClass = 'text-pink-500'; }
+                    if(evt.type === 'play') { icon = 'fa-ticket'; colorClass = 'text-purple-500'; }
+                    if(evt.type === 'warn') { icon = 'fa-exclamation-circle'; colorClass = 'text-red-600 font-bold'; }
+                    if(evt.type === 'fly')  { icon = 'fa-plane'; colorClass = 'text-doraBlue'; }
+
+                    if(evt.link) {
+                        const query = encodeURIComponent(evt.link);
+                        linkHtml = `<a href="https://www.google.com/maps/search/?api=1&query=${query}" target="_blank" class="ml-2 text-doraBlue text-[10px] border border-doraBlue px-2 py-0.5 rounded-full hover:bg-doraBlue hover:text-white transition"><i class="fa-solid fa-map-location-dot"></i> 地图</a>`;
+                    }
+
+                    eventsHtml += `
+                        <div class="flex items-start mb-3 last:mb-0">
+                            <div class="w-12 text-xs font-bold text-gray-400 pt-1 text-right mr-3 flex-shrink-0 font-mono">${evt.time}</div>
+                            <div class="flex-1 pb-3 border-b border-dashed border-gray-200 last:border-0 relative">
+                                <div class="absolute -left-[19px] top-1.5 w-2 h-2 rounded-full bg-white border-2 border-gray-300"></div>
+                                <div class="text-sm ${colorClass}">
+                                    <i class="fa-solid ${icon} mr-1"></i>
+                                    <span class="text-gray-800">${evt.text}</span>
+                                    ${linkHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="dora-card mb-4 relative overflow-hidden group">
+                        <div class="bg-gradient-to-r from-gray-50 to-white p-3 border-b border-gray-100 flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="hanko-stamp shadow-sm group-hover:shadow-md transition-shadow">
+                                    <span class="text-[10px] opacity-70">1月</span>
+                                    <span class="text-lg font-bold leading-none">${day.date.split('/')[1]}</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-700 text-sm">${day.title}</h3>
+                                    <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 rounded">周${day.day}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white/80 bg-washi">
+                            ${eventsHtml}
+                            <div class="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-500 flex items-center">
+                                <i class="fa-solid fa-bed mr-2 text-doraBlue"></i> ${day.hotel}
+                            </div>
+                        </div>
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${day.color.replace('border', 'bg')}"></div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // --- WALLET LOGIC ---
+        let expenseChartInstance = null;
+
+        function initWallet() {
+            // Load Rate
+            const savedRate = localStorage.getItem('travelApp_rate');
+            if(savedRate) document.getElementById('exchangeRate').value = savedRate;
+
+            // Load Expenses
+            renderExpenses();
+            updateCalc(); // Init calc result
+            
+            // Enter key on calc
+            document.getElementById('calcInput').addEventListener('keyup', (e) => {
+                updateCalc();
+            });
+        }
+
+        function updateCalc() {
+            const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
+            const jpy = parseFloat(document.getElementById('calcInput').value) || 0;
+            const myr = (jpy / 100) * rate;
+            
+            document.getElementById('calcResult').innerText = `RM ${myr.toFixed(2)}`;
+            localStorage.setItem('travelApp_rate', rate);
+        }
+
+        let tempPhotoBase64 = null;
+
+        function handlePhotoSelect(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Compress using Canvas
+                    const canvas = document.getElementById('imgCanvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxWidth = 300; // Resize to max 300px width for storage
+                    const scaleSize = maxWidth / img.width;
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scaleSize;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+                    
+                    document.getElementById('photoFileName').innerText = "照片已准备";
+                    document.getElementById('photoFileName').classList.remove('text-gray-400');
+                    document.getElementById('photoFileName').classList.add('text-doraBlue', 'font-bold');
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function addExpense() {
+            const item = document.getElementById('expenseItem').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            
+            if(!item || isNaN(amount)) {
+                alert("请输入项目和金额");
+                return;
+            }
+
+            const expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
+            expenses.push({
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                item: item,
+                amount: amount,
+                photo: tempPhotoBase64
+            });
+
+            localStorage.setItem('travelApp_expenses', JSON.stringify(expenses));
+            
+            // Reset form
+            document.getElementById('expenseItem').value = '';
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('photoFileName').innerText = '未选择';
+            document.getElementById('photoFileName').classList.add('text-gray-400');
+            document.getElementById('photoFileName').classList.remove('text-doraBlue', 'font-bold');
+            tempPhotoBase64 = null;
+
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            const expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
+            const listContainer = document.getElementById('expenseList');
+            const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
+            
+            let html = '';
+            let totalJpy = 0;
+
+            // Sort newest first
+            expenses.slice().reverse().forEach(exp => {
+                totalJpy += exp.amount;
+                const myr = (exp.amount / 100) * rate;
+                
+                const photoHtml = exp.photo 
+                    ? `<img src="${exp.photo}" class="receipt-thumb ml-3 shadow-sm" onclick="viewPhoto('${exp.photo}')">` 
+                    : '';
+
+                html += `
+                    <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <div class="flex items-center flex-1">
+                            <div>
+                                <div class="font-bold text-gray-800">${exp.item}</div>
+                                <div class="text-xs text-gray-400">${exp.date}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-doraBlue">¥${exp.amount.toLocaleString()}</div>
+                            <div class="text-xs text-gray-500 font-mono">≈ RM ${myr.toFixed(1)}</div>
+                        </div>
+                        ${photoHtml}
+                        <button onclick="deleteExpense(${exp.id})" class="ml-3 text-gray-300 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 transition"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+
+            listContainer.innerHTML = html || '<div class="text-center text-gray-400 py-6 border-2 border-dashed border-gray-200 rounded-lg">尚无记录，快去消费吧！</div>';
+            
+            const totalMyr = (totalJpy / 100) * rate;
+            document.getElementById('totalJpy').innerText = `¥${totalJpy.toLocaleString()}`;
+            document.getElementById('totalMyr').innerText = `RM ${totalMyr.toFixed(2)}`;
+
+            updateChart(expenses);
+        }
+
+        function deleteExpense(id) {
+            if(!confirm("确定删除此笔记录？")) return;
+            let expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
+            expenses = expenses.filter(e => e.id !== id);
+            localStorage.setItem('travelApp_expenses', JSON.stringify(expenses));
+            renderExpenses();
+        }
+
+        function clearExpenses() {
+            if(confirm("确定清除所有记账资料？(无法复原)")) {
+                localStorage.removeItem('travelApp_expenses');
+                renderExpenses();
+            }
+        }
+
+        function viewPhoto(base64) {
+            const w = window.open("");
+            w.document.write(`<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#333"><img src="${base64}" style="max-width:100%;max-height:100%"></div>`);
+        }
+
+        // --- CHART JS ---
+        function updateChart(expenses) {
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            
+            let sorted = expenses.slice().sort((a,b) => b.amount - a.amount);
+            let labels = [];
+            let data = [];
+            
+            if (sorted.length > 5) {
+                let top5 = sorted.slice(0, 5);
+                let others = sorted.slice(5);
+                
+                top5.forEach(e => { labels.push(e.item); data.push(e.amount); });
+                
+                let otherTotal = others.reduce((sum, e) => sum + e.amount, 0);
+                labels.push("其他");
+                data.push(otherTotal);
+            } else {
+                sorted.forEach(e => { labels.push(e.item); data.push(e.amount); });
+            }
+
+            if(expenseChartInstance) expenseChartInstance.destroy();
+
+            expenseChartInstance = new Chart(ctx, {
+                type: 'doughnut', // Changed to Doughnut for variety
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '支出 (JPY)',
+                        data: data,
+                        backgroundColor: [
+                            '#0093D0', '#DD2F2F', '#F9CD1E', '#4CAF50', '#9C27B0', '#9E9E9E'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+
+        // --- LISTS LOGIC ---
+        function initLists() {
+            renderChecklist();
+            renderMemos();
+        }
+
+        function switchListTab(tab) {
+            if(tab === 'checklist') {
+                document.getElementById('view-checklist').classList.remove('hidden');
+                document.getElementById('view-memo').classList.add('hidden');
+                document.getElementById('tab-checklist').classList.add('bg-doraBlue', 'text-white', 'shadow-md');
+                document.getElementById('tab-checklist').classList.remove('text-gray-500');
+                document.getElementById('tab-memo').classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
+                document.getElementById('tab-memo').classList.add('text-gray-500');
+            } else {
+                document.getElementById('view-checklist').classList.add('hidden');
+                document.getElementById('view-memo').classList.remove('hidden');
+                document.getElementById('tab-memo').classList.add('bg-doraBlue', 'text-white', 'shadow-md');
+                document.getElementById('tab-memo').classList.remove('text-gray-500');
+                document.getElementById('tab-checklist').classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
+                document.getElementById('tab-checklist').classList.add('text-gray-500');
+            }
+        }
+
+        // Checklist
+        function renderChecklist() {
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
+            if(!items) {
+                items = defaultChecklist;
+                localStorage.setItem('travelApp_checklist', JSON.stringify(items));
+            }
+
+            const container = document.getElementById('checklistContainer');
+            let html = '';
+            
+            items.forEach((item, index) => {
+                const strikeClass = item.done ? 'line-through text-gray-400' : 'text-gray-800';
+                const checkState = item.done ? 'checked' : '';
+                const bgClass = item.done ? 'bg-gray-100' : 'bg-white border border-gray-200';
+                
+                html += `
+                    <li class="flex items-center p-3 rounded-lg ${bgClass} shadow-sm transition-all">
+                        <input type="checkbox" ${checkState} onchange="toggleCheck(${index})" class="w-5 h-5 text-doraBlue rounded focus:ring-doraBlue mr-3 cursor-pointer">
+                        <span class="flex-1 ${strikeClass} font-medium">${item.text}</span>
+                        <button onclick="deleteCheck(${index})" class="text-gray-300 hover:text-red-500 w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+                    </li>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function toggleCheck(index) {
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
+            items[index].done = !items[index].done;
+            localStorage.setItem('travelApp_checklist', JSON.stringify(items));
+            renderChecklist();
+        }
+
+        function addCheckItem() {
+            const input = document.getElementById('newCheckItem');
+            const text = input.value.trim();
+            if(!text) return;
+            
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
+            items.push({ text: text, done: false });
+            localStorage.setItem('travelApp_checklist', JSON.stringify(items));
+            
+            input.value = '';
+            renderChecklist();
+        }
+
+        function deleteCheck(index) {
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
+            items.splice(index, 1);
+            localStorage.setItem('travelApp_checklist', JSON.stringify(items));
+            renderChecklist();
+        }
+
+        // Memos
+        function renderMemos() {
+            const memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
+            const container = document.getElementById('memoContainer');
+            let html = '';
+
+            memos.reverse().forEach((memo, index) => {
+                let content = memo.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-doraBlue underline break-all font-bold"><i class="fa-solid fa-link"></i> 链接</a>');
+                content = content.replace(/\n/g, '<br>');
+
+                html += `
+                    <div class="bg-yellow-50 border-l-4 border-doraYellow p-3 rounded-r-lg relative group shadow-sm hover:shadow-md transition">
+                        <div class="text-sm text-gray-700 leading-relaxed font-sans">${content}</div>
+                        <div class="text-[10px] text-gray-400 mt-2 text-right border-t border-yellow-200 pt-1 flex justify-between items-center">
+                            <span><i class="fa-regular fa-clock mr-1"></i>${memo.date}</span>
+                            <button onclick="deleteMemo(${memos.length - 1 - index})" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html || '<div class="text-center text-gray-400 text-sm mt-4 italic">还没有笔记，把想去的地方记下来吧！</div>';
+        }
+
+        function addMemo() {
+            const input = document.getElementById('newMemoContent');
+            const text = input.value.trim();
+            if(!text) return;
+
+            let memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
+            memos.push({
+                text: text,
+                date: new Date().toLocaleString('zh-CN', { hour12: false, month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+            });
+            localStorage.setItem('travelApp_memos', JSON.stringify(memos));
+            
+            input.value = '';
+            renderMemos();
+        }
+
+        function deleteMemo(originalIndex) {
+            if(!confirm("删除此笔记？")) return;
+            let memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
+            memos.splice(originalIndex, 1);
+            localStorage.setItem('travelApp_memos', JSON.stringify(memos));
+            renderMemos();
+        }
+
+    </script>
+</body>
+</html>
