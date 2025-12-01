@@ -1,15 +1,16 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + AI Features + Rich Guide + Large Font Mode -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + AI Features + Rich Guide + Large Font + Mobile Optimized -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <!-- Viewport optimized for mobile to prevent auto-zoom on inputs -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>哆啦A梦的日本旅游百宝袋 (深度详解版)</title>
+    <title>哆啦A梦的日本旅游百宝袋</title>
     
-    <!-- Apple Touch Icon -->
+    <!-- Apple Touch Icon (Must place 'apple-touch-icon.jpeg' in the same folder) -->
     <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,6 +42,9 @@
                     },
                     fontFamily: {
                         sans: ['"M PLUS Rounded 1c"', '"Noto Sans SC"', 'sans-serif'],
+                    },
+                    spacing: {
+                        'safe-bottom': 'env(safe-area-inset-bottom)',
                     }
                 }
             }
@@ -53,10 +57,13 @@
             -webkit-tap-highlight-color: transparent;
             background-image: radial-gradient(#B3E5FC 1px, transparent 1px);
             background-size: 20px 20px;
-            font-size: 16px; /* Increased base font size */
+            font-size: 16px; /* Base Large Font */
+            color: #333;
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #0093D0; border-radius: 10px; }
 
         .bg-washi {
@@ -82,6 +89,7 @@
             box-shadow: 4px 4px 0px rgba(0, 147, 208, 0.2);
             overflow: hidden;
             position: relative;
+            margin-bottom: 20px; /* Ensure spacing between cards */
         }
 
         .dora-btn {
@@ -98,35 +106,41 @@
 
         .hanko-stamp {
             border: 2px solid #DD2F2F;
-            border-radius: 10px;
+            border-radius: 12px;
             color: #DD2F2F;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             font-family: 'Kosugi Maru', sans-serif;
-            padding: 4px 10px;
+            padding: 6px 12px;
             display: inline-flex;
             flex-direction: column;
             align-items: center;
+            min-width: 60px;
         }
 
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            height: 280px; /* Slightly taller for readability */
+            height: 300px; /* Taller for mobile readability */
         }
 
+        /* View Section Optimization */
         .view-section {
             display: none;
-            padding-bottom: 110px; /* More space for larger nav */
-            animation: fadeIn 0.4s ease-out;
+            /* Critical fix for overlapping footer */
+            padding-bottom: 140px; 
+            animation: fadeIn 0.3s ease-out;
         }
         .view-section.active { display: block; }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border-left-color: #0093D0;
             animation: spin 1s linear infinite;
@@ -136,57 +150,63 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 100;
+            z-index: 1000; /* High Z-index to cover everything */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
         }
         .modal-content {
             background-color: #fff;
-            margin: 15% auto;
+            margin: 10vh auto;
             padding: 24px;
-            border: 3px solid #0093D0;
-            border-radius: 20px;
+            border: 4px solid #0093D0;
+            border-radius: 24px;
             width: 90%;
             max-width: 400px;
             position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body class="text-doraDark font-sans text-base">
+<body class="text-doraDark font-sans text-base leading-normal">
 
-    <!-- Header -->
-    <header class="fixed top-0 w-full z-50 bg-seigaiha text-white shadow-lg rounded-b-3xl border-b-4 border-doraWhite">
-        <div class="max-w-2xl mx-auto px-4 py-4 flex justify-between items-center relative overflow-hidden">
-            <div class="absolute top-0 right-10 opacity-20 text-5xl transform rotate-12 pointer-events-none">🌸</div>
-            <div class="flex items-center gap-3 relative z-10">
-                <div onclick="openApiKeyModal()" class="w-12 h-12 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-2xl shadow-md cursor-pointer active:scale-95 transition">
+    <!-- Header (Fixed Top) -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-seigaiha text-white shadow-lg rounded-b-3xl border-b-4 border-doraWhite h-auto">
+        <div class="max-w-2xl mx-auto px-5 py-4 flex justify-between items-center relative overflow-hidden">
+            <!-- Deco -->
+            <div class="absolute top-0 right-8 opacity-20 text-6xl transform rotate-12 pointer-events-none">🌸</div>
+            
+            <div class="flex items-center gap-4 relative z-10">
+                <div onclick="openApiKeyModal()" class="w-12 h-12 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-2xl shadow-md cursor-pointer active:scale-95 transition flex-shrink-0">
                     <i class="fa-solid fa-robot"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-xl tracking-wide">日本之旅 <span class="text-base font-normal opacity-90">2025</span></h1>
-                    <p class="text-xs bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-0.5">
+                <div class="flex-1 min-w-0">
+                    <h1 class="font-bold text-xl tracking-wide truncate">日本之旅 <span class="text-base font-normal opacity-90">2025</span></h1>
+                    <p class="text-xs bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-1 shadow-sm">
                         <i class="fa-solid fa-door-open mr-1"></i>AI 任意门
                     </p>
                 </div>
             </div>
-            <div class="text-right text-sm relative z-10 font-bold bg-doraDark/10 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/20">
-                <div>1/21 - 1/30</div>
-                <div>大阪 · 京都</div>
+            
+            <div class="text-right relative z-10 font-bold bg-doraDark/10 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/20 ml-2 flex-shrink-0">
+                <div class="text-sm">1/21 - 1/30</div>
+                <div class="text-xs opacity-90">大阪 · 京都</div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-2xl mx-auto px-4 pt-28"> <!-- Increased padding-top -->
-        <!-- PLAN SECTION -->
+    <!-- Main Content Container (Padded for fixed header/footer) -->
+    <main class="max-w-2xl mx-auto px-4 pt-36 min-h-screen"> 
+        <!-- pt-36 (9rem) ensures content starts below the fixed header -->
+
+        <!-- ==================== PLAN SECTION ==================== -->
         <section id="plan" class="view-section active">
-            <div class="dora-card p-5 mb-6 border-l-8 border-doraRed flex items-center justify-between">
+            <div class="dora-card p-5 border-l-8 border-doraRed flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-doraBlue mb-1"><i class="fa-solid fa-torii-gate mr-1 text-doraRed"></i> 旅程概览</h2>
+                    <h2 class="text-2xl font-bold text-doraBlue mb-1"><i class="fa-solid fa-torii-gate mr-2 text-doraRed"></i>旅程概览</h2>
                     <p class="text-sm text-gray-500">欢迎使用您的 AI 专属旅游百宝袋！</p>
                 </div>
                 <div class="text-5xl opacity-20 transform rotate-12">🏯</div>
@@ -194,258 +214,185 @@
             <div id="timeline-container" class="space-y-6"></div>
         </section>
 
-        <!-- GUIDE SECTION -->
+        <!-- ==================== GUIDE SECTION ==================== -->
         <section id="guide" class="view-section">
-            <div class="mb-8"><h2 class="text-3xl font-bold text-doraBlue mb-2 text-center border-b-4 border-doraYellow inline-block px-6">深度导览手册</h2></div>
+            <div class="mb-8 text-center">
+                <h2 class="text-3xl font-bold text-doraBlue inline-block border-b-4 border-doraYellow px-6 pb-1">深度导览手册</h2>
+            </div>
             <div class="space-y-8">
                 
-                <!-- 1. Osaka Castle -->
+                <!-- Osaka Castle -->
                 <article class="dora-card p-0">
-                    <div class="bg-doraBlue text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-brands fa-fort-awesome mr-2"></i>大阪城天守阁</span>
+                    <div class="bg-doraBlue text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-brands fa-fort-awesome mr-2 text-xl"></i>大阪城</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-doraBlue shadow-none">1/21</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>📜 历史风云：</strong> 这里曾是丰臣秀吉统得天下的象征，后来在“大阪夏之阵”中被德川家康摧毁。现在的天守阁是1931年由市民集资重建的第三代建筑，内部是极其现代化的博物馆。</p>
-                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                                <li><strong>必看：</strong> 8楼展望台可俯瞰整个大阪市景。</li>
-                                <li><strong>必拍：</strong> 护城河边的“极乐桥”是拍摄天守阁的最佳角度。</li>
-                                <li><strong>冷知识：</strong> 天守阁地下埋着一个“时空胶囊”，预定在5000年后（公元6970年）打开！</li>
-                            </ul>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>📜 历史风云：</strong> 丰臣秀吉统得天下的象征。现在的天守阁是1931年重建的第三代建筑，内部有电梯！</p>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 text-sm space-y-1">
+                                <p><strong>👀 必看：</strong> 8楼展望台俯瞰大阪。</p>
+                                <p><strong>📸 必拍：</strong> 护城河边的“极乐桥”。</p>
+                                <p><strong>⏳ 冷知识：</strong> 地下埋着一个将在5000年后打开的时空胶囊。</p>
+                            </div>
                         </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                        <div class="w-full h-48 mt-4 bg-gray-100 rounded-xl overflow-hidden border-2 border-doraDark">
                              <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5200%2C34.6850%2C135.5350%2C34.6900&amp;layer=mapnik&amp;marker=34.6873%2C135.5262"></iframe>
                         </div>
                     </div>
                 </article>
 
-                <!-- 2. Nara Park -->
+                <!-- Nara Park -->
                 <article class="dora-card p-0">
-                    <div class="bg-green-600 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-paw mr-2"></i>奈良公园 & 东大寺</span>
+                    <div class="bg-green-600 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-paw mr-2 text-xl"></i>奈良公园</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-green-600 shadow-none">1/22</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🦌 神之使者：</strong> 这里的1200多只鹿都是野生的，被视为春日大社神明的使者。它们会向游客点头鞠躬讨要仙贝，非常有礼貌（但也很贪吃）。</p>
-                            <p class="mb-3"><strong>🙏 东大寺：</strong> 世界最大的木造建筑大佛殿，供奉着高15米的卢舍那佛。大佛鼻孔大小的柱洞，据说钻过去能保佑无病无灾。</p>
-                            <div class="bg-green-50 p-3 rounded-lg border border-green-100 text-sm">
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🦌 神之使者：</strong> 1200多只野生鹿。记得买“鹿仙贝”，但要小心被围攻！</p>
+                            <div class="bg-green-50 p-3 rounded-xl border border-green-100 text-sm">
                                 <strong class="text-doraBlue">⚠️ 喂鹿攻略：</strong> 
-                                <ol class="list-decimal pl-5 mt-2 space-y-1">
-                                    <li>不要逗鹿，它们可能会顶人或踢人。</li>
-                                    <li>喂完后摊开双手展示手心，表示“真的没有了”。</li>
+                                <ul class="list-disc pl-5 mt-1">
+                                    <li>喂完后摊开双手展示手心。</li>
                                     <li>小心手中的地图和钞票，它们也吃纸！</li>
-                                </ol>
+                                </ul>
                             </div>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.8300%2C34.6800%2C135.8500%2C34.6900&amp;layer=mapnik&amp;marker=34.6850%2C135.8430"></iframe>
                         </div>
                     </div>
                 </article>
 
-                <!-- 3. Solaniwa Onsen -->
+                <!-- Solaniwa Onsen -->
                 <article class="dora-card p-0">
-                    <div class="bg-orange-500 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-hot-tub-person mr-2"></i>空庭温泉</span>
+                    <div class="bg-orange-500 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-hot-tub-person mr-2 text-xl"></i>空庭温泉</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-orange-500 shadow-none">1/22</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>♨️ 穿越时空：</strong> 关西最大的温泉主题公园！整体设计重现了安土桃山时代的繁华街景。入场包含免费的浴衣租赁，换上衣服后怎么拍都好看。</p>
-                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-orange-50 p-3 rounded-lg">
-                                <li><strong>天空庭园：</strong> 顶楼有巨大的日式庭园和足汤，可以一边泡脚一边欣赏庭园美景。</li>
-                                <li><strong>千本鸟居：</strong> 庭园内有红色的鸟居隧道，是必打卡的拍照点。</li>
-                                <li><strong>美食：</strong> 馆内有居酒屋风格的餐厅，泡完温泉喝一杯牛奶或啤酒是最高享受。</li>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>♨️ 穿越时空：</strong> 关西最大的温泉主题公园！免费浴衣租赁，仿佛回到安土桃山时代。</p>
+                            <ul class="list-disc pl-5 mt-2 text-sm text-gray-600 bg-orange-50 p-3 rounded-xl">
+                                <li><strong>天空庭园：</strong> 顶楼有足汤和红色千本鸟居，拍照绝美。</li>
+                                <li><strong>美食：</strong> 泡完澡一定要喝一瓶冰牛奶。</li>
                             </ul>
                         </div>
                     </div>
                 </article>
 
-                <!-- 4. Kuromon Ichiba -->
+                <!-- Kuromon Ichiba -->
                 <article class="dora-card p-0">
-                    <div class="bg-doraYellow text-doraDark p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-fish-fins mr-2"></i>黑门市场</span>
+                    <div class="bg-doraYellow text-doraDark p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-fish-fins mr-2 text-xl"></i>黑门市场</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-doraDark shadow-none">1/23</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🍣 大阪的厨房：</strong> 拥有近200年历史，全长近600米。这里不仅是当地主妇买菜的地方，更是游客狂吃海鲜的天堂。</p>
-                            <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🍣 大阪的厨房：</strong> 拥有近200年历史。现烤海鲜、和牛串、海胆应有尽有。</p>
+                            <div class="bg-yellow-50 p-3 rounded-xl border border-yellow-200 text-sm">
                                 <strong>🤤 必吃推荐：</strong>
-                                <ul class="list-disc pl-5 mt-2 space-y-1">
-                                    <li><strong>黑银金枪鱼店：</strong> 现切的大托罗（大肥），油脂丰富入口即化。</li>
-                                    <li><strong>烤海鲜：</strong> 手掌大的扇贝、生蚝、大虾，店家会现烤。</li>
-                                    <li><strong>高桥食品：</strong> 这里的浓厚豆浆和关东煮非常有名。</li>
-                                    <li><strong>草莓大福：</strong> 饭后甜点首选。</li>
+                                <ul class="list-disc pl-5 mt-1">
+                                    <li>黑银金枪鱼（入口即化）</li>
+                                    <li>现烤手掌大扇贝</li>
+                                    <li>高桥食品的浓厚豆浆</li>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5030%2C34.6630%2C135.5090%2C34.6680&amp;layer=mapnik&amp;marker=34.6655%2C135.5065"></iframe>
                         </div>
                     </div>
                 </article>
 
-                <!-- 5. USJ -->
+                <!-- USJ -->
                 <article class="dora-card p-0">
-                    <div class="bg-purple-600 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>环球影城 (USJ)</span>
+                    <div class="bg-purple-600 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-wand-magic-sparkles mr-2 text-xl"></i>USJ 影城</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-purple-600 shadow-none">1/24</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🍄 超级任天堂世界：</strong> 现实版的马里奥游戏世界！戴上能量手环，敲砖块、玩真人版马里奥赛车。记得要在App里抽“整理券”才能进入哦！</p>
-                            <p class="mb-3"><strong>⚡ 哈利波特魔法世界：</strong> 霍格沃茨城堡的还原度极高。“禁忌之旅”是必玩的室内过山车。一定要喝一杯黄油啤酒（无酒精）。</p>
-                            <p class="bg-purple-50 p-3 rounded-lg border border-purple-100 text-sm">
-                                <strong class="text-doraRed">💡 哆啦A梦的秘密：</strong> 园区的爆米花桶经常有期间限定款（如小黄人、鬼灭之刃、马里奥星星），是最好的纪念品，背在身上超级可爱！
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🍄 任天堂世界：</strong> 必玩！需要要在官方App抽“整理券”才能进入。</p>
+                            <p><strong>⚡ 哈利波特：</strong> 必喝黄油啤酒（无酒精）。</p>
+                            <p class="bg-purple-50 p-3 rounded-xl border border-purple-100 text-sm">
+                                <strong class="text-doraRed">💡 购物：</strong> 爆米花桶是最好的纪念品，背在身上超级可爱！
                             </p>
                         </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.4286%2C34.6614%2C135.4366%2C34.6694&amp;layer=mapnik&amp;marker=34.6654%2C135.4323"></iframe>
-                        </div>
                     </div>
                 </article>
 
-                <!-- 6. Shinsekai & Tsutenkaku -->
+                <!-- Harukas 300 -->
                 <article class="dora-card p-0">
-                    <div class="bg-doraYellow text-doraDark p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-tower-observation mr-2"></i>新世界 & 通天阁</span>
-                        <span class="hanko-stamp text-xs bg-white border-white text-doraDark shadow-none">1/25</span>
-                    </div>
-                    <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🏮 复古大阪：</strong> 这里保留了昭和时代的怀旧氛围，五颜六色的大招牌非常适合拍照。通天阁是这里的地标，被戏称为“大阪的埃菲尔铁塔”。</p>
-                            <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
-                                <strong>🍢 炸串文化 (Kushikatsu)：</strong>
-                                <p class="mt-1">新世界是炸串的发源地。吃炸串有一个绝对规则：<strong>“禁止二次蘸酱” (No Double Dipping)</strong>！因为酱汁是大家公用的。</p>
-                            </div>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5000%2C34.6500%2C135.5100%2C34.6550&amp;layer=mapnik&amp;marker=34.6525%2C135.5063"></iframe>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 7. Harukas 300 -->
-                <article class="dora-card p-0">
-                    <div class="bg-sky-500 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-building mr-2"></i>阿倍野 HARUKAS</span>
+                    <div class="bg-sky-500 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-building mr-2 text-xl"></i>阿倍野 300</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-sky-500 shadow-none">1/25</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🏙️ 关西之巅：</strong> 300米高的日本第一高楼。58-60层是展望台，拥有360度落地玻璃。黄昏时分，可以看到夕阳落下大阪湾的绝美景色。</p>
-                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-sky-50 p-3 rounded-lg">
-                                <li><strong>天空庭园 (58F)：</strong> 露天的中庭，风可以直接吹进来，可以买关东煮和啤酒坐在这里吃。</li>
-                                <li><strong>天空洗手间：</strong> 全透明落地窗的厕所，体验在云端上厕所的刺激感！</li>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🏙️ 关西之巅：</strong> 300米高的日本第一高楼。58-60层是360度玻璃展望台。</p>
+                            <ul class="list-disc pl-5 mt-2 text-sm text-gray-600 bg-sky-50 p-3 rounded-xl">
+                                <li><strong>天空庭园 (58F)：</strong> 露天中庭，可以买关东煮坐着吃。</li>
+                                <li><strong>天空洗手间：</strong> 全透明落地窗厕所，非常刺激！</li>
                             </ul>
                         </div>
                     </div>
                 </article>
 
-                <!-- 8. Kannabe Highlands -->
+                <!-- Kannabe Highlands -->
                 <article class="dora-card p-0">
-                    <div class="bg-blue-300 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-person-skiing mr-2"></i>神锅高原滑雪</span>
+                    <div class="bg-blue-300 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-person-skiing mr-2 text-xl"></i>神锅高原</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-blue-300 shadow-none">1/26</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>❄️ 雪国秘境：</strong> 位于兵库县北部，这里的Up Kannabe滑雪场坡度平缓，非常适合家庭和初学者。</p>
-                            <p class="bg-blue-50 p-3 rounded-lg border border-blue-100 text-sm">
-                                <strong>🦀 冬季美食：</strong> 这里也是著名的“松叶蟹”产地。滑完雪后，回到民宿享用热腾腾的螃蟹火锅和但马牛料理，是冬天最奢侈的享受！
-                                <br><br>
-                                <strong>🌋 地质奇观：</strong> 神锅山其实是一座年轻的死火山，滑雪场的地形就是利用了火山口的斜坡。
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>❄️ 雪国与螃蟹：</strong> 兵库县北部的粉雪天堂，适合初学者。</p>
+                            <p class="bg-blue-50 p-3 rounded-xl border border-blue-100 text-sm">
+                                <strong>🦀 冬季限定：</strong> 运动完后，晚餐享用当地著名的“松叶蟹”火锅，是冬天最奢侈的享受！
                             </p>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=134.6600%2C35.4800%2C134.7000%2C35.5200&amp;layer=mapnik&amp;marker=35.5000%2C134.6800"></iframe>
                         </div>
                     </div>
                 </article>
 
-                <!-- 9. Sanjusangendo -->
+                <!-- Sanjusangendo -->
                 <article class="dora-card p-0">
-                    <div class="bg-amber-700 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-vihara mr-2"></i>三十三间堂</span>
+                    <div class="bg-amber-700 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-vihara mr-2 text-xl"></i>三十三间堂</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-amber-700 shadow-none">1/27</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>👀 视觉震撼：</strong> 全日本最狭长的木造建筑，内部供奉着<strong>1001尊</strong>千手观音立像，全部贴着金箔，整齐排列的景象令人屏息。</p>
-                            <p class="bg-amber-50 p-3 rounded-lg border border-amber-100 text-sm">
-                                <strong>🏹 通矢大赛：</strong> 这里每年1月都会举行传统的射箭比赛，因为大殿全长120米，古代武士会在这里比试谁能从一端射到另一端，是京都新年的风物诗。
-                                <br>
-                                <strong>注意：</strong> 堂内严禁摄影，请用心用眼去记录这神圣的画面。
-                            </p>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>👀 视觉震撼：</strong> 日本最狭长的木造建筑，供奉着<strong>1001尊</strong>千手观音立像，全部贴着金箔，景象令人屏息。</p>
+                            <p class="text-sm text-doraRed font-bold">⚠️ 注意：堂内严禁摄影。</p>
                         </div>
                     </div>
                 </article>
 
-                <!-- 10. Kiyomizu-dera -->
+                <!-- Kiyomizu-dera -->
                 <article class="dora-card p-0">
-                    <div class="bg-doraRed text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-torii-gate mr-2"></i>清水寺 & 三年坂</span>
+                    <div class="bg-doraRed text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-torii-gate mr-2 text-xl"></i>清水寺</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-doraRed shadow-none">1/28</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🏯 清水舞台：</strong> 本堂前方悬空的木造舞台，由139根巨大的榉木柱支撑，没用一根钉子。这里可以眺望京都市全景。</p>
-                            <div class="bg-red-50 p-3 rounded-lg border border-red-100 text-sm">
-                                <strong>💧 音羽之瀑：</strong> 寺庙下方有三道泉水，分别代表：
-                                <ul class="flex gap-3 mt-2 justify-center font-bold text-center">
-                                    <li class="bg-blue-100 px-3 py-1 rounded text-blue-600">学问</li>
-                                    <li class="bg-pink-100 px-3 py-1 rounded text-pink-600">恋爱</li>
-                                    <li class="bg-green-100 px-3 py-1 rounded text-green-600">长寿</li>
-                                </ul>
-                                <p class="mt-2 text-center text-gray-500">只能选一道喝，贪心喝三道会失效哦！</p>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🏯 建筑奇迹：</strong> 清水舞台悬空建造在悬崖上，没有使用一根钉子。</p>
+                            <div class="bg-red-50 p-3 rounded-xl border border-red-100 text-sm">
+                                <strong>💧 音羽之瀑：</strong> 
+                                <p class="mt-1">三道泉水分别代表：<span class="text-blue-600 font-bold">学问</span>、<span class="text-pink-600 font-bold">恋爱</span>、<span class="text-green-600 font-bold">长寿</span>。只能选一道喝哦！</p>
                             </div>
                         </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.7800%2C34.9900%2C135.7900%2C35.0000&amp;layer=mapnik&amp;marker=34.9949%2C135.7850"></iframe>
-                        </div>
                     </div>
                 </article>
 
-                <!-- 11. Arashiyama -->
+                <!-- Rinku Town -->
                 <article class="dora-card p-0">
-                    <div class="bg-teal-600 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-tree mr-2"></i>岚山 & 竹林</span>
-                        <span class="hanko-stamp text-xs bg-white border-white text-teal-600 shadow-none">1/29</span>
-                    </div>
-                    <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🌉 渡月桥：</strong> 岚山的象征，横跨桂川。名字美意为“似满月过桥”。</p>
-                            <p class="mb-3"><strong>🎍 竹林小径：</strong> 通往天龙寺北侧的竹林隧道，是《卧虎藏龙》般的意境。清晨前往可以避开人潮，听到风吹竹叶的沙沙声。</p>
-                            <p class="bg-teal-50 p-3 rounded-lg border border-teal-100 text-sm">
-                                <strong>⛩️ 野宫神社：</strong> 竹林里的小神社，据说求姻缘和学业非常灵验。这里的鸟居是日本少见的黑色树皮原木鸟居。
-                            </p>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.6600%2C35.0050%2C135.6800%2C35.0150&amp;layer=mapnik&amp;marker=35.0094%2C135.6668"></iframe>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 12. Rinku Town -->
-                <article class="dora-card p-0">
-                    <div class="bg-pink-500 text-white p-4 font-bold flex justify-between items-center text-lg">
-                        <span><i class="fa-solid fa-bag-shopping mr-2"></i>临空城 Outlet</span>
+                    <div class="bg-pink-500 text-white p-4 font-bold flex justify-between items-center">
+                        <span class="text-lg flex items-center"><i class="fa-solid fa-bag-shopping mr-2 text-xl"></i>临空城 Outlet</span>
                         <span class="hanko-stamp text-xs bg-white border-white text-pink-500 shadow-none">1/29</span>
                     </div>
                     <div class="p-5 bg-washi">
-                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
-                            <p class="mb-3"><strong>🛍️ 最后的血拼：</strong> 距离关西机场仅一站之遥。这里有200多家店铺，建筑风格模仿美国查尔斯顿港口城市，风景优美。</p>
-                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-pink-50 p-3 rounded-lg">
-                                <li><strong>品牌：</strong> 运动品牌 (Nike, Adidas)、日系服饰 (Beams, Urban Research) 经常有惊人折扣。</li>
-                                <li><strong>Seacle 摩天轮：</strong> 85米高的大摩天轮，可以眺望大海和机场起降的飞机。</li>
-                                <li><strong>补给：</strong> 旁边的 Trial 超市是24小时营业的，非常适合最后补买零食、药妆。</li>
-                            </ul>
-                        </div>
-                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.2900%2C34.4050%2C135.3100%2C34.4150&amp;layer=mapnik&amp;marker=34.4100%2C135.3000"></iframe>
+                        <div class="text-base text-gray-700 leading-relaxed space-y-3">
+                            <p><strong>🛍️ 最后的血拼：</strong> 离机场一站路。Nike, Adidas, Beams 等品牌常有惊人折扣。</p>
+                            <p class="bg-pink-50 p-3 rounded-xl border border-pink-100 text-sm">
+                                <strong>🛒 Trial 超市：</strong> 24小时营业，适合最后补买零食、药妆回国。
+                            </p>
                         </div>
                     </div>
                 </article>
@@ -453,28 +400,27 @@
             </div>
         </section>
 
-        <!-- WALLET SECTION -->
+        <!-- ==================== WALLET SECTION ==================== -->
         <section id="wallet" class="view-section">
             <div class="mb-6">
                 <h2 class="text-3xl font-bold text-doraBlue mb-2 text-center">AI 记账本</h2>
-                <p class="text-base text-gray-500 text-center">自动辨识收据，聪明记账</p>
+                <p class="text-base text-gray-500 text-center">拍照自动辨识金额</p>
             </div>
 
             <!-- Rate -->
             <div class="dora-card p-4 mb-6 bg-gradient-to-r from-blue-50 to-white flex justify-between items-center">
                 <label class="text-base text-doraBlue font-bold">汇率 (100日元):</label>
                 <div class="flex items-center">
-                    <input type="number" id="exchangeRate" value="2.70" class="border-b-2 border-doraBlue text-center w-20 bg-transparent font-bold text-doraRed text-lg outline-none" onchange="updateCalc()">
+                    <input type="number" id="exchangeRate" value="2.70" class="border-b-2 border-doraBlue text-center w-20 bg-transparent font-bold text-doraRed text-lg outline-none p-1" onchange="updateCalc()">
                     <span class="text-sm ml-2 font-bold">MYR</span>
                 </div>
             </div>
 
             <!-- AI Expense Form -->
             <div class="dora-card p-5 mb-8 relative">
-                <div id="scanLoading" class="absolute inset-0 bg-white/90 z-20 hidden flex-col items-center justify-center">
+                <div id="scanLoading" class="absolute inset-0 bg-white/95 z-20 hidden flex-col items-center justify-center rounded-xl">
                     <div class="spinner mb-3"></div>
-                    <p class="text-doraBlue text-lg font-bold animate-pulse">正在吃记忆吐司...</p>
-                    <p class="text-sm text-gray-500">AI 分析收据中</p>
+                    <p class="text-doraBlue text-lg font-bold animate-pulse">记忆吐司分析中...</p>
                 </div>
 
                 <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
@@ -482,12 +428,12 @@
                     
                     <!-- Photo Upload Area -->
                     <div class="flex gap-3">
-                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border border-dashed border-gray-300 px-3 py-4 rounded-xl text-base flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition flex flex-col justify-center items-center">
-                            <i class="fa-solid fa-camera text-2xl mb-2"></i>
-                            <span id="photoStatusText" class="text-sm">1. 拍收据</span>
+                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border-2 border-dashed border-gray-300 px-3 py-4 rounded-xl text-base flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition flex flex-col justify-center items-center h-24">
+                            <i class="fa-solid fa-camera text-2xl mb-1"></i>
+                            <span id="photoStatusText" class="text-sm font-bold">1. 拍收据</span>
                         </label>
                         <!-- AI Scan Button -->
-                        <button onclick="scanReceipt()" class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl px-4 py-3 flex flex-col justify-center items-center shadow-md active:scale-95 transition w-28">
+                        <button onclick="scanReceipt()" class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl px-4 py-3 flex flex-col justify-center items-center shadow-md active:scale-95 transition w-28 h-24">
                             <i class="fa-solid fa-wand-magic-sparkles text-2xl mb-1 text-yellow-300"></i>
                             <span class="text-sm font-bold">2. AI 辨识</span>
                         </button>
@@ -495,11 +441,11 @@
                     </div>
 
                     <div class="flex gap-3 mt-2">
-                        <input type="text" id="expenseItem" placeholder="品项 (AI 自动填)" class="border-2 border-gray-200 rounded-xl p-3 flex-[2] text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
+                        <input type="text" id="expenseItem" placeholder="品项 (AI 填)" class="border-2 border-gray-200 rounded-xl p-3 flex-[2] text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
                         <input type="number" id="expenseAmount" placeholder="金额" class="border-2 border-gray-200 rounded-xl p-3 flex-1 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
                     </div>
 
-                    <button onclick="addExpense()" class="dora-btn py-4 w-full font-bold text-xl mt-3 flex items-center justify-center shadow-lg">
+                    <button onclick="addExpense()" class="dora-btn py-4 w-full font-bold text-xl mt-2 flex items-center justify-center shadow-lg">
                         <i class="fa-solid fa-check mr-2"></i> 记上一笔
                     </button>
                 </div>
@@ -516,13 +462,13 @@
                     <span id="totalJpy" class="font-bold text-xl mr-3 text-doraDark">¥0</span>
                     <span id="totalMyr" class="font-bold text-doraRed text-2xl">RM 0.00</span>
                 </div>
-                <button onclick="clearExpenses()" class="text-sm text-red-400 underline mt-6 w-full text-center py-2">清除所有记录</button>
+                <button onclick="clearExpenses()" class="text-sm text-red-400 underline mt-6 w-full text-center py-3">清除所有记录</button>
             </div>
         </section>
 
-        <!-- LISTS SECTION -->
+        <!-- ==================== LISTS SECTION ==================== -->
         <section id="lists" class="view-section">
-            <div class="flex mb-8 bg-white rounded-full p-1.5 border-2 border-doraBlue/20 shadow-sm">
+            <div class="flex mb-8 bg-white rounded-full p-2 border-2 border-doraBlue/20 shadow-sm">
                 <button onclick="switchListTab('checklist')" id="tab-checklist" class="flex-1 py-3 rounded-full text-base font-bold bg-doraBlue text-white shadow-md transition-all">行前清单</button>
                 <button onclick="switchListTab('memo')" id="tab-memo" class="flex-1 py-3 rounded-full text-base font-bold text-gray-500 transition-all">个人备忘录</button>
             </div>
@@ -539,27 +485,45 @@
                 <div class="dora-card p-5 bg-washi">
                     <div class="mb-6">
                         <textarea id="newMemoContent" rows="4" placeholder="输入文字..." class="w-full border-2 border-gray-200 rounded-xl p-3 mb-3 text-base bg-yellow-50/50 focus:border-doraYellow outline-none"></textarea>
-                        <button onclick="addMemo()" class="dora-btn py-3 w-full text-base">新增笔记</button>
+                        <button onclick="addMemo()" class="dora-btn py-3 w-full text-base font-bold">新增笔记</button>
                     </div>
                     <div id="memoContainer" class="space-y-4"></div>
                 </div>
             </div>
         </section>
 
-        <!-- INFO SECTION -->
+        <!-- ==================== INFO SECTION ==================== -->
         <section id="info" class="view-section">
             <h2 class="text-3xl font-bold text-doraBlue mb-8 text-center">旅游小帮手</h2>
-            <div class="grid grid-cols-2 gap-6">
-                <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-5 flex flex-col items-center justify-center h-40 text-center group hover:border-doraBlue transition">
+            <div class="grid grid-cols-2 gap-5">
+                <!-- Weather -->
+                <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center group hover:border-doraBlue transition">
                     <i class="fa-solid fa-cloud-sun text-5xl text-doraBlue mb-3 group-hover:scale-110 transition"></i>
-                    <span class="font-bold text-lg">天气预报</span>
+                    <span class="font-bold text-lg text-gray-700">天气预报</span>
                 </a>
-                <div class="dora-card p-5 flex flex-col items-center justify-center h-40 text-center bg-red-50 border-doraRed">
+                
+                <!-- Emergency -->
+                <div class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center bg-red-50 border-doraRed">
                     <i class="fa-solid fa-truck-medical text-4xl text-doraRed mb-3 animate-pulse"></i>
                     <span class="font-bold text-lg text-doraRed">紧急电话</span>
                     <span class="text-base font-bold text-doraRed mt-1">110 / 119</span>
                 </div>
+
+                <!-- Embassy -->
+                <a href="https://www.kln.gov.my/web/jpn_tokyo/home" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center group hover:border-doraDark transition">
+                    <i class="fa-solid fa-building-flag text-5xl text-doraDark mb-3 group-hover:scale-110 transition"></i>
+                    <span class="font-bold text-lg text-gray-700">办事处</span>
+                    <span class="text-sm text-gray-500 mt-1">大马驻日使馆</span>
+                </a>
+
+                <!-- Hotel Info -->
+                <div onclick="alert('京都花开酒店: 075-123-4567\nMinn十三: 06-123-4567\n神锅高原住宿: 0796-45-0000')" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center cursor-pointer hover:bg-yellow-50 transition">
+                    <i class="fa-solid fa-hotel text-5xl text-doraYellow mb-3 drop-shadow-sm"></i>
+                    <span class="font-bold text-lg text-gray-700">住宿电话</span>
+                    <span class="text-sm text-gray-400 mt-1">点击查看</span>
+                </div>
             </div>
+
              <!-- Rules Card -->
              <div class="dora-card p-6 mt-8 border-l-8 border-gray-400">
                 <h3 class="font-bold text-doraDark text-lg mb-4 border-b pb-3 flex items-center">
@@ -567,10 +531,10 @@
                 </h3>
                 <ul class="list-disc list-inside text-base space-y-3 text-gray-600">
                     <li>日本街道<strong>禁止边走边吃</strong>。</li>
-                    <li>搭乘电车请将手机设为静音，<strong>禁止通话</strong>。</li>
-                    <li>入境日本请勿携带<strong>肉类制品</strong>及新鲜蔬果。</li>
-                    <li>泡温泉时<strong>纹身</strong>通常需要遮盖，请先确认规定。</li>
-                    <li>结账时请将钱放入<strong>托盘</strong>，不要直接手递手。</li>
+                    <li>搭乘电车请将手机设为静音。</li>
+                    <li>入境日本请勿携带<strong>肉类制品</strong>。</li>
+                    <li>泡温泉时<strong>纹身</strong>通常需要遮盖。</li>
+                    <li>结账时钱请放入<strong>托盘</strong>。</li>
                 </ul>
             </div>
         </section>
@@ -608,7 +572,7 @@
             </div>
 
             <div class="flex gap-3 pt-2">
-                <input type="text" id="chatInput" placeholder="问问附近有什么好吃的..." class="flex-1 border-2 border-doraBlue rounded-full px-5 py-3 text-base outline-none shadow-sm">
+                <input type="text" id="chatInput" placeholder="附近有什么好吃的..." class="flex-1 border-2 border-doraBlue rounded-full px-5 py-3 text-base outline-none shadow-sm">
                 <button onclick="sendChat()" class="bg-doraBlue text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md active:scale-90 transition text-xl">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -622,15 +586,15 @@
     </button>
 
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-3 px-3 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] z-50 rounded-t-3xl h-24">
+    <nav class="fixed bottom-0 left-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-3 px-3 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50 rounded-t-3xl h-24">
         <div class="max-w-2xl mx-auto flex justify-around items-center h-full pb-2">
             <button onclick="switchView('plan')" class="nav-btn active flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="plan">
                 <i class="fa-solid fa-calendar-days text-2xl mb-1"></i>
-                <span class="text-xs font-bold">行程</span>
+                <span class="text-xs font-bold mt-1">行程</span>
             </button>
             <button onclick="switchView('guide')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="guide">
                 <i class="fa-solid fa-book-open text-2xl mb-1"></i>
-                <span class="text-xs font-bold">导览</span>
+                <span class="text-xs font-bold mt-1">导览</span>
             </button>
             
             <button onclick="switchView('wallet')" class="nav-btn relative -top-8 bg-doraBlue text-white rounded-full w-20 h-20 flex items-center justify-center border-4 border-white shadow-2xl transition transform active:scale-95" data-target="wallet">
@@ -639,11 +603,11 @@
 
             <button onclick="switchView('lists')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="lists">
                 <i class="fa-solid fa-list-check text-2xl mb-1"></i>
-                <span class="text-xs font-bold">清单</span>
+                <span class="text-xs font-bold mt-1">清单</span>
             </button>
             <button onclick="switchView('info')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="info">
                 <i class="fa-solid fa-circle-info text-2xl mb-1"></i>
-                <span class="text-xs font-bold">资讯</span>
+                <span class="text-xs font-bold mt-1">资讯</span>
             </button>
         </div>
     </nav>
@@ -651,7 +615,7 @@
     <canvas id="imgCanvas" style="display: none;"></canvas>
 
     <script>
-        // --- JS LOGIC (UPDATED FOR LARGE FONTS) ---
+        // --- JS LOGIC ---
         
         function getApiKey() {
             const key = localStorage.getItem('dora_gemini_key');
@@ -819,7 +783,8 @@
 
                     eventsHtml += `
                         <div class="flex items-start mb-4 last:mb-0">
-                            <div class="w-14 text-sm font-bold text-gray-400 pt-1 text-right mr-3 flex-shrink-0 font-mono">${evt.time}</div>
+                            <!-- Adjusted margin and width for mobile -->
+                            <div class="w-16 text-sm font-bold text-gray-400 pt-1 text-right mr-3 flex-shrink-0 font-mono">${evt.time}</div>
                             <div class="flex-1 pb-4 border-b border-dashed border-gray-200 last:border-0 relative">
                                 <div class="absolute -left-[23px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-gray-300"></div>
                                 <div class="text-base ${colorClass}"><i class="fa-solid ${icon} mr-1"></i><span class="text-gray-800">${evt.text}</span>${linkHtml}</div>
@@ -830,8 +795,8 @@
                     <div class="dora-card mb-6 relative overflow-hidden group">
                         <div class="bg-gradient-to-r from-gray-50 to-white p-4 border-b border-gray-100 flex justify-between items-center">
                             <div class="flex items-center gap-4">
-                                <div class="hanko-stamp shadow-sm"><span class="text-xs opacity-70">1月</span><span class="text-xl font-bold leading-none">${day.date.split('/')[1]}</span></div>
-                                <div><h3 class="font-bold text-gray-700 text-lg">${day.title}</h3><span class="text-xs text-gray-400 bg-gray-100 px-2 rounded">周${day.day}</span></div>
+                                <div class="hanko-stamp shadow-sm flex-shrink-0"><span class="text-xs opacity-70">1月</span><span class="text-xl font-bold leading-none">${day.date.split('/')[1]}</span></div>
+                                <div class="flex-1"><h3 class="font-bold text-gray-700 text-lg leading-tight">${day.title}</h3><span class="text-xs text-gray-400 bg-gray-100 px-2 rounded mt-1 inline-block">周${day.day}</span></div>
                             </div>
                         </div>
                         <div class="p-5 bg-washi">${eventsHtml}<div class="mt-4 pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fa-solid fa-bed mr-2 text-doraBlue"></i> ${day.hotel}</div></div>
@@ -902,7 +867,7 @@
                 totalJpy += exp.amount;
                 const myr = (exp.amount / 100) * rate;
                 const photoHtml = exp.photo ? `<img src="${exp.photo}" class="w-14 h-14 object-cover rounded ml-3" onclick="viewPhoto('${exp.photo}')">` : '';
-                html += `<div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100"><div class="flex-1"><div class="font-bold text-gray-800 text-lg">${exp.item}</div><div class="text-sm text-gray-400">${exp.date}</div></div><div class="text-right"><div class="font-bold text-doraBlue text-lg">¥${exp.amount.toLocaleString()}</div><div class="text-sm text-gray-500">RM ${myr.toFixed(1)}</div></div>${photoHtml}<button onclick="deleteExpense(${exp.id})" class="ml-4 text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-trash"></i></button></div>`;
+                html += `<div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100"><div class="flex-1 min-w-0"><div class="font-bold text-gray-800 text-lg truncate">${exp.item}</div><div class="text-sm text-gray-400">${exp.date}</div></div><div class="text-right flex-shrink-0 ml-2"><div class="font-bold text-doraBlue text-lg">¥${exp.amount.toLocaleString()}</div><div class="text-sm text-gray-500">RM ${myr.toFixed(1)}</div></div>${photoHtml}<button onclick="deleteExpense(${exp.id})" class="ml-4 text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-trash"></i></button></div>`;
             });
             listContainer.innerHTML = html || '<div class="text-center text-gray-400 py-8 text-lg">尚无记录</div>';
             const totalMyr = (totalJpy / 100) * rate;
@@ -954,7 +919,7 @@
             if(!items) { items = defaultChecklist; localStorage.setItem('travelApp_checklist', JSON.stringify(items)); }
             let html = '';
             items.forEach((item, index) => {
-                html += `<li class="flex items-center p-4 rounded-xl ${item.done ? 'bg-gray-100' : 'bg-white border border-gray-200'} mb-3"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCheck(${index})" class="w-6 h-6 text-doraBlue mr-4"><span class="flex-1 text-lg ${item.done ? 'line-through text-gray-400' : ''}">${item.text}</span><button onclick="deleteCheck(${index})" class="text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></li>`;
+                html += `<li class="flex items-center p-4 rounded-xl ${item.done ? 'bg-gray-100' : 'bg-white border border-gray-200'} mb-3"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCheck(${index})" class="w-6 h-6 text-doraBlue mr-4 flex-shrink-0"><span class="flex-1 text-lg ${item.done ? 'line-through text-gray-400' : ''}">${item.text}</span><button onclick="deleteCheck(${index})" class="text-gray-300 hover:text-red-500 text-xl ml-2"><i class="fa-solid fa-xmark"></i></button></li>`;
             });
             document.getElementById('checklistContainer').innerHTML = html;
         }
@@ -983,7 +948,7 @@
             const memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
             let html = '';
             memos.reverse().forEach((memo, index) => {
-                html += `<div class="bg-yellow-50 border-l-4 border-doraYellow p-4 rounded-r-xl mb-3 relative group"><div class="text-base text-gray-700 leading-relaxed">${memo.text.replace(/\n/g, '<br>')}</div><div class="text-xs text-gray-400 mt-2 text-right flex justify-between"><span>${memo.date}</span><button onclick="deleteMemo(${memos.length - 1 - index})"><i class="fa-solid fa-trash text-gray-300 hover:text-red-500 text-lg"></i></button></div></div>`;
+                html += `<div class="bg-yellow-50 border-l-4 border-doraYellow p-4 rounded-r-xl mb-3 relative group"><div class="text-base text-gray-700 leading-relaxed break-words">${memo.text.replace(/\n/g, '<br>')}</div><div class="text-xs text-gray-400 mt-2 text-right flex justify-between"><span>${memo.date}</span><button onclick="deleteMemo(${memos.length - 1 - index})"><i class="fa-solid fa-trash text-gray-300 hover:text-red-500 text-lg"></i></button></div></div>`;
             });
             document.getElementById('memoContainer').innerHTML = html || '<div class="text-center text-gray-400 text-lg mt-6">无笔记</div>';
         }
