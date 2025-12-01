@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + AI Features + Rich Guide + Large Font + Mobile Optimized -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + Rich Guide + Large Font + Mobile Optimized + No AI -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -24,9 +24,6 @@
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Markdown Parser for AI Chat -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -89,7 +86,7 @@
             box-shadow: 4px 4px 0px rgba(0, 147, 208, 0.2);
             overflow: hidden;
             position: relative;
-            margin-bottom: 20px; /* Ensure spacing between cards */
+            margin-bottom: 20px;
         }
 
         .dora-btn {
@@ -120,13 +117,12 @@
         .chart-container {
             position: relative;
             width: 100%;
-            height: 300px; /* Taller for mobile readability */
+            height: 300px;
         }
 
         /* View Section Optimization */
         .view-section {
             display: none;
-            /* Critical fix for overlapping footer */
             padding-bottom: 140px; 
             animation: fadeIn 0.3s ease-out;
         }
@@ -135,39 +131,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border-left-color: #0093D0;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000; /* High Z-index to cover everything */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10vh auto;
-            padding: 24px;
-            border: 4px solid #0093D0;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -180,13 +143,13 @@
             <div class="absolute top-0 right-8 opacity-20 text-6xl transform rotate-12 pointer-events-none">🌸</div>
             
             <div class="flex items-center gap-4 relative z-10">
-                <div onclick="openApiKeyModal()" class="w-12 h-12 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-2xl shadow-md cursor-pointer active:scale-95 transition flex-shrink-0">
-                    <i class="fa-solid fa-robot"></i>
+                <div class="w-12 h-12 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-2xl shadow-md flex-shrink-0">
+                    <i class="fa-solid fa-bell"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <h1 class="font-bold text-xl tracking-wide truncate">日本之旅 <span class="text-base font-normal opacity-90">2025</span></h1>
                     <p class="text-xs bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-1 shadow-sm">
-                        <i class="fa-solid fa-door-open mr-1"></i>AI 任意门
+                        <i class="fa-solid fa-door-open mr-1"></i>任意门开启中
                     </p>
                 </div>
             </div>
@@ -207,7 +170,7 @@
             <div class="dora-card p-5 border-l-8 border-doraRed flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-bold text-doraBlue mb-1"><i class="fa-solid fa-torii-gate mr-2 text-doraRed"></i>旅程概览</h2>
-                    <p class="text-sm text-gray-500">欢迎使用您的 AI 专属旅游百宝袋！</p>
+                    <p class="text-sm text-gray-500">欢迎使用您的专属旅游百宝袋！</p>
                 </div>
                 <div class="text-5xl opacity-20 transform rotate-12">🏯</div>
             </div>
@@ -403,8 +366,8 @@
         <!-- ==================== WALLET SECTION ==================== -->
         <section id="wallet" class="view-section">
             <div class="mb-6">
-                <h2 class="text-3xl font-bold text-doraBlue mb-2 text-center">AI 记账本</h2>
-                <p class="text-base text-gray-500 text-center">拍照自动辨识金额</p>
+                <h2 class="text-3xl font-bold text-doraBlue mb-2 text-center">百宝袋记账本</h2>
+                <p class="text-base text-gray-500 text-center">轻松记录每一笔开销</p>
             </div>
 
             <!-- Rate -->
@@ -416,36 +379,23 @@
                 </div>
             </div>
 
-            <!-- AI Expense Form -->
+            <!-- Expense Form -->
             <div class="dora-card p-5 mb-8 relative">
-                <div id="scanLoading" class="absolute inset-0 bg-white/95 z-20 hidden flex-col items-center justify-center rounded-xl">
-                    <div class="spinner mb-3"></div>
-                    <p class="text-doraBlue text-lg font-bold animate-pulse">记忆吐司分析中...</p>
-                </div>
-
                 <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
                 <div class="grid grid-cols-1 gap-4">
+                    <div class="flex gap-3 mt-2">
+                        <input type="text" id="expenseItem" placeholder="品项名称" class="border-2 border-gray-200 rounded-xl p-3 flex-[2] text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
+                        <input type="number" id="expenseAmount" placeholder="日元金额" class="border-2 border-gray-200 rounded-xl p-3 flex-1 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
+                    </div>
                     
                     <!-- Photo Upload Area -->
-                    <div class="flex gap-3">
-                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border-2 border-dashed border-gray-300 px-3 py-4 rounded-xl text-base flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition flex flex-col justify-center items-center h-24">
-                            <i class="fa-solid fa-camera text-2xl mb-1"></i>
-                            <span id="photoStatusText" class="text-sm font-bold">1. 拍收据</span>
-                        </label>
-                        <!-- AI Scan Button -->
-                        <button onclick="scanReceipt()" class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl px-4 py-3 flex flex-col justify-center items-center shadow-md active:scale-95 transition w-28 h-24">
-                            <i class="fa-solid fa-wand-magic-sparkles text-2xl mb-1 text-yellow-300"></i>
-                            <span class="text-sm font-bold">2. AI 辨识</span>
-                        </button>
-                        <input type="file" id="expensePhoto" accept="image/*" class="hidden" onchange="handlePhotoSelect(this)">
-                    </div>
+                    <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border-2 border-dashed border-gray-300 px-3 py-4 rounded-xl text-base text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition flex flex-col justify-center items-center h-24">
+                        <i class="fa-solid fa-camera text-2xl mb-1"></i>
+                        <span id="photoStatusText" class="text-sm font-bold">点击上传收据/照片</span>
+                    </label>
+                    <input type="file" id="expensePhoto" accept="image/*" class="hidden" onchange="handlePhotoSelect(this)">
 
-                    <div class="flex gap-3 mt-2">
-                        <input type="text" id="expenseItem" placeholder="品项 (AI 填)" class="border-2 border-gray-200 rounded-xl p-3 flex-[2] text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
-                        <input type="number" id="expenseAmount" placeholder="金额" class="border-2 border-gray-200 rounded-xl p-3 flex-1 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
-                    </div>
-
-                    <button onclick="addExpense()" class="dora-btn py-4 w-full font-bold text-xl mt-2 flex items-center justify-center shadow-lg">
+                    <button onclick="addExpense()" class="dora-btn py-4 w-full font-bold text-xl mt-3 flex items-center justify-center shadow-lg">
                         <i class="fa-solid fa-check mr-2"></i> 记上一笔
                     </button>
                 </div>
@@ -534,56 +484,11 @@
                     <li>搭乘电车请将手机设为静音。</li>
                     <li>入境日本请勿携带<strong>肉类制品</strong>。</li>
                     <li>泡温泉时<strong>纹身</strong>通常需要遮盖。</li>
-                    <li>结账时钱请放入<strong>托盘</strong>。</li>
+                    <li>结账时请将钱放入<strong>托盘</strong>，不要直接手递手。</li>
                 </ul>
             </div>
         </section>
     </main>
-
-    <!-- API Key Modal -->
-    <div id="apiKeyModal" class="modal">
-        <div class="modal-content">
-            <span onclick="closeApiKeyModal()" class="absolute top-2 right-4 text-3xl cursor-pointer text-gray-400 hover:text-red-500">&times;</span>
-            <h2 class="text-2xl font-bold text-doraBlue mb-6 text-center">输入 Gemini API Key</h2>
-            <p class="text-base text-gray-600 mb-6">为了启用 AI 收据辨识和哆啦A梦聊天功能，请输入您的 Google Gemini API Key。</p>
-            <input type="password" id="inputApiKey" placeholder="AIzaSy..." class="w-full border-2 border-gray-300 rounded-xl p-3 mb-6 text-base">
-            <button onclick="saveApiKey()" class="dora-btn w-full py-3 font-bold text-lg">保存 Key</button>
-            <p class="text-sm text-gray-400 mt-4 text-center">Key 仅保存在您的浏览器中。</p>
-        </div>
-    </div>
-
-    <!-- Chat Modal -->
-    <div id="chatModal" class="modal">
-        <div class="modal-content" style="height: 85vh; max-height: 700px; display: flex; flex-direction: column;">
-            <span onclick="toggleChat()" class="absolute top-3 right-5 text-3xl cursor-pointer z-10 text-gray-400 hover:text-red-500">&times;</span>
-            <div class="text-center border-b pb-3 mb-3">
-                <div class="w-20 h-20 mx-auto bg-doraBlue rounded-full border-4 border-white shadow-lg flex items-center justify-center mb-2 overflow-hidden">
-                    <img src="https://api.iconify.design/noto:robot.svg" alt="Doraemon" class="w-14 h-14">
-                </div>
-                <h2 class="font-bold text-xl text-doraBlue">哆啦A梦 旅游顾问</h2>
-            </div>
-            
-            <div id="chatHistory" class="flex-1 overflow-y-auto p-3 space-y-4 bg-gray-50 rounded-xl mb-3 text-base">
-                <div class="flex gap-2">
-                    <div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%] text-gray-700">
-                        你好！我是哆啦A梦。关于这次日本之旅，有什么我可以帮你的吗？
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex gap-3 pt-2">
-                <input type="text" id="chatInput" placeholder="附近有什么好吃的..." class="flex-1 border-2 border-doraBlue rounded-full px-5 py-3 text-base outline-none shadow-sm">
-                <button onclick="sendChat()" class="bg-doraBlue text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md active:scale-90 transition text-xl">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating Chat Button -->
-    <button onclick="toggleChat()" class="fixed bottom-28 right-5 bg-doraBlue text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center border-4 border-white z-40 active:scale-95 transition animate-bounce">
-        <i class="fa-solid fa-comments text-3xl"></i>
-    </button>
 
     <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-3 px-3 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50 rounded-t-3xl h-24">
@@ -615,68 +520,8 @@
     <canvas id="imgCanvas" style="display: none;"></canvas>
 
     <script>
-        // --- JS LOGIC ---
+        // --- JS LOGIC (NO AI) ---
         
-        function getApiKey() {
-            const key = localStorage.getItem('dora_gemini_key');
-            if (!key) { openApiKeyModal(); return null; }
-            return key;
-        }
-        function openApiKeyModal() { document.getElementById('apiKeyModal').style.display = 'block'; }
-        function closeApiKeyModal() { document.getElementById('apiKeyModal').style.display = 'none'; }
-        function saveApiKey() {
-            const key = document.getElementById('inputApiKey').value.trim();
-            if (key) { localStorage.setItem('dora_gemini_key', key); closeApiKeyModal(); alert("API Key 已保存！"); }
-        }
-
-        async function callGemini(prompt, imageBase64 = null) {
-            const apiKey = getApiKey();
-            if (!apiKey) return null;
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const parts = [{ text: prompt }];
-            if (imageBase64) { parts.push({ inline_data: { mime_type: "image/jpeg", data: imageBase64.split(',')[1] } }); }
-            try {
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: parts }] }) });
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) { alert("AI 呼叫失败: " + error.message); return null; }
-        }
-
-        async function scanReceipt() {
-            if (!tempPhotoBase64) { alert("请先拍摄或上传收据照片！"); return; }
-            document.getElementById('scanLoading').style.display = 'flex';
-            const prompt = `You are a receipt scanner. Extract TOTAL amount (integer Yen) and MAIN item name (Simplified Chinese). Return JSON: { "item": "String", "amount": Number }`;
-            const result = await callGemini(prompt, tempPhotoBase64);
-            document.getElementById('scanLoading').style.display = 'none';
-            if (result) {
-                try {
-                    const data = JSON.parse(result.replace(/```json/g, '').replace(/```/g, '').trim());
-                    document.getElementById('expenseItem').value = data.item;
-                    document.getElementById('expenseAmount').value = data.amount;
-                } catch (e) { alert("无法辨识，请手动输入。"); }
-            }
-        }
-
-        function toggleChat() { const m = document.getElementById('chatModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
-        
-        async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-            const history = document.getElementById('chatHistory');
-            history.innerHTML += `<div class="flex gap-2 justify-end"><div class="bg-doraBlue text-white p-3 rounded-l-xl rounded-br-xl shadow-sm max-w-[85%]">${text}</div></div>`;
-            input.value = ''; history.scrollTop = history.scrollHeight;
-            const loadingId = 'loading-' + Date.now();
-            history.innerHTML += `<div id="${loadingId}" class="flex gap-2"><div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm"><i class="fa-solid fa-ellipsis animate-bounce"></i></div></div>`;
-            history.scrollTop = history.scrollHeight;
-            const reply = await callGemini(`You are Doraemon guide. Reply in Simplified Chinese. User: ${text}`);
-            document.getElementById(loadingId).remove();
-            if (reply) {
-                history.innerHTML += `<div class="flex gap-2"><div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%] prose prose-base">${marked.parse(reply)}</div></div>`;
-                history.scrollTop = history.scrollHeight;
-            }
-        }
-
         const tripData = [
             { date: "1/21", day: "日", title: "抵达 & 大阪城", hotel: "大阪 Minn 十三", color: "border-doraBlue", events: [
                 { time: "AM", text: "抵达关西机场，前往 Minn 十三 寄行李", type: "move" },
@@ -744,7 +589,6 @@
             initWallet();
             initLists();
             switchView('plan');
-            document.getElementById('chatInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') sendChat(); });
         });
 
         function switchView(viewId) {
@@ -851,7 +695,7 @@
             localStorage.setItem('travelApp_expenses', JSON.stringify(expenses));
             document.getElementById('expenseItem').value = '';
             document.getElementById('expenseAmount').value = '';
-            document.getElementById('photoStatusText').innerText = '1. 拍收据';
+            document.getElementById('photoStatusText').innerText = '点击上传收据/照片';
             document.getElementById('photoStatusText').classList.remove('text-green-600', 'font-bold');
             tempPhotoBase64 = null;
             renderExpenses();
