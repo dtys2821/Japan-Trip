@@ -1,26 +1,16 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional (Seigaiha Blue, Washi White, Hanko Red, Sakura Pink) -->
-
-<!-- Application Structure Plan: 
-    1. Navigation: Fixed Bottom Tab Bar.
-    2. Header: Sticky top header with "Seigaiha" wave pattern and "Anywhere Door" concept.
-    3. Content Views:
-       - PLAN: Vertical Timeline with "Hanko" style date stamps.
-       - GUIDE: Magazine-style with paper texture backgrounds.
-       - WALLET: Dashboard with updated exchange rate (2.70).
-       - LISTS: Tabbed interface (Updated items).
-       - INFO: Grid layout.
--->
-
-<!-- CONFIRMATION: NO SVG graphics used (except inline for patterns). NO Mermaid JS used. -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + AI Features + Rich Guide + Large Font Mode -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>哆啦A梦的日本旅游百宝袋</title>
+    <title>哆啦A梦的日本旅游百宝袋 (深度详解版)</title>
     
-    <!-- Google Fonts: Rounded & JP style -->
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
@@ -34,6 +24,9 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Markdown Parser for AI Chat -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -44,11 +37,10 @@
                         doraYellow: '#F9CD1E',
                         doraWhite: '#FFFFFF',
                         doraDark: '#333333',
-                        jpSakura: '#FFDBE9', /* Sakura Pink */
-                        jpMatcha: '#C5E1A5', /* Matcha Green */
+                        jpSakura: '#FFDBE9',
                     },
                     fontFamily: {
-                        sans: ['"M PLUS Rounded 1c"', '"Noto Sans SC"', '"Microsoft YaHei"', 'sans-serif'],
+                        sans: ['"M PLUS Rounded 1c"', '"Noto Sans SC"', 'sans-serif'],
                     }
                 }
             }
@@ -59,23 +51,19 @@
         body {
             background-color: #E0F7FF;
             -webkit-tap-highlight-color: transparent;
-            /* Subtle Pattern Background */
             background-image: radial-gradient(#B3E5FC 1px, transparent 1px);
             background-size: 20px 20px;
+            font-size: 16px; /* Increased base font size */
         }
-        
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #0093D0; border-radius: 10px; }
 
-        /* Washi Paper Texture Class */
         .bg-washi {
             background-color: #ffffff;
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        /* Seigaiha (Wave) Pattern for Header */
         .bg-seigaiha {
             background-color: #0093D0;
             background-image: 
@@ -87,7 +75,6 @@
             background-position: 0 0, 15px 15px;
         }
 
-        /* Doraemon Card Style with Washi texture */
         .dora-card {
             background: white;
             border-radius: 20px;
@@ -96,15 +83,6 @@
             overflow: hidden;
             position: relative;
         }
-        .dora-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-        .dora-card > * { position: relative; z-index: 1; }
 
         .dora-btn {
             background-color: #0093D0;
@@ -118,329 +96,476 @@
             box-shadow: 0 0 0 #005f85;
         }
 
-        /* Hanko (Stamp) Style for Dates */
         .hanko-stamp {
             border: 2px solid #DD2F2F;
-            border-radius: 8px; /* Slightly rounded square */
+            border-radius: 10px;
             color: #DD2F2F;
             background-color: rgba(255, 255, 255, 0.9);
             font-family: 'Kosugi Maru', sans-serif;
-            box-shadow: inset 0 0 4px rgba(221, 47, 47, 0.2);
+            padding: 4px 10px;
             display: inline-flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            line-height: 1.1;
-            padding: 4px 8px;
         }
 
-        /* Chart Container strict sizing */
         .chart-container {
             position: relative;
             width: 100%;
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 250px;
-            max-height: 250px;
+            margin: 0 auto;
+            height: 280px; /* Slightly taller for readability */
         }
 
         .view-section {
             display: none;
-            padding-bottom: 100px; 
+            padding-bottom: 110px; /* More space for larger nav */
             animation: fadeIn 0.4s ease-out;
         }
         .view-section.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #0093D0;
+            animation: spin 1s linear infinite;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .receipt-thumb {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid #eee;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
         }
-        
-        /* Japanese Vertical Text Utility (Optional for decorative headers) */
-        .vertical-rl {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 24px;
+            border: 3px solid #0093D0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
         }
     </style>
-    <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
 </head>
-<body class="text-doraDark font-sans">
+<body class="text-doraDark font-sans text-base">
 
-    <!-- Header with Seigaiha Pattern -->
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-seigaiha text-white shadow-lg rounded-b-3xl border-b-4 border-doraWhite">
         <div class="max-w-2xl mx-auto px-4 py-4 flex justify-between items-center relative overflow-hidden">
-            <!-- Decorative Sakura -->
-            <div class="absolute top-0 right-10 opacity-20 text-4xl transform rotate-12 pointer-events-none">🌸</div>
-            <div class="absolute bottom-0 left-10 opacity-20 text-3xl transform -rotate-12 pointer-events-none">🌸</div>
-
+            <div class="absolute top-0 right-10 opacity-20 text-5xl transform rotate-12 pointer-events-none">🌸</div>
             <div class="flex items-center gap-3 relative z-10">
-                <div class="w-11 h-11 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-xl shadow-md">
-                    <i class="fa-solid fa-bell"></i>
+                <div onclick="openApiKeyModal()" class="w-12 h-12 bg-doraWhite rounded-full flex items-center justify-center border-2 border-doraDark text-doraRed text-2xl shadow-md cursor-pointer active:scale-95 transition">
+                    <i class="fa-solid fa-robot"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg tracking-wide">日本之旅 <span class="text-sm font-normal opacity-90">2025</span></h1>
-                    <p class="text-[10px] bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-0.5">
-                        <i class="fa-solid fa-door-open mr-1"></i>任意门开启中
+                    <h1 class="font-bold text-xl tracking-wide">日本之旅 <span class="text-base font-normal opacity-90">2025</span></h1>
+                    <p class="text-xs bg-white text-doraBlue px-2 py-0.5 rounded-full inline-block font-bold mt-0.5">
+                        <i class="fa-solid fa-door-open mr-1"></i>AI 任意门
                     </p>
                 </div>
             </div>
-            <div class="text-right text-xs relative z-10 font-bold bg-doraDark/10 px-2 py-1 rounded-lg backdrop-blur-sm border border-white/20">
-                <div><i class="fa-solid fa-calendar-check mr-1"></i>1/21 - 1/30</div>
-                <div><i class="fa-solid fa-location-dot mr-1"></i>大阪 · 京都</div>
+            <div class="text-right text-sm relative z-10 font-bold bg-doraDark/10 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/20">
+                <div>1/21 - 1/30</div>
+                <div>大阪 · 京都</div>
             </div>
         </div>
-        <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
     </header>
 
-    <!-- Main Content Container -->
-    <main class="max-w-2xl mx-auto px-4 pt-24">
-
-        <!-- ==================== PLAN SECTION ==================== -->
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 pt-28"> <!-- Increased padding-top -->
+        <!-- PLAN SECTION -->
         <section id="plan" class="view-section active">
-            <!-- Summary Card -->
-            <div class="dora-card p-4 mb-6 border-l-8 border-doraRed flex items-center justify-between">
+            <div class="dora-card p-5 mb-6 border-l-8 border-doraRed flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-doraBlue mb-1">
-                        <i class="fa-solid fa-torii-gate mr-1 text-doraRed"></i> 旅程概览
-                    </h2>
-                    <p class="text-xs text-gray-500">欢迎使用您的专属旅游百宝袋！</p>
+                    <h2 class="text-2xl font-bold text-doraBlue mb-1"><i class="fa-solid fa-torii-gate mr-1 text-doraRed"></i> 旅程概览</h2>
+                    <p class="text-sm text-gray-500">欢迎使用您的 AI 专属旅游百宝袋！</p>
                 </div>
-                <div class="text-4xl opacity-20 transform rotate-12">🏯</div>
+                <div class="text-5xl opacity-20 transform rotate-12">🏯</div>
             </div>
-
-            <!-- Timeline Container -->
-            <div id="timeline-container" class="space-y-5">
-                <!-- JS will populate this -->
-            </div>
+            <div id="timeline-container" class="space-y-6"></div>
         </section>
 
-        <!-- ==================== GUIDE SECTION ==================== -->
+        <!-- GUIDE SECTION -->
         <section id="guide" class="view-section">
-            <div class="mb-6 relative">
-                <h2 class="text-2xl font-bold text-doraBlue mb-2 text-center relative z-10">
-                    <span class="inline-block border-b-4 border-doraYellow px-4">深度导览手册</span>
-                </h2>
-                <p class="text-sm text-gray-500 text-center">像漫画一样有趣的景点小知识</p>
-            </div>
-
-            <div class="space-y-6">
-                <!-- USJ Map & Guide -->
-                <article class="dora-card p-0">
-                    <div class="bg-doraBlue text-white p-3 font-bold flex justify-between items-center relative overflow-hidden">
-                        <div class="absolute right-0 top-0 text-6xl opacity-10 transform translate-x-2 -translate-y-2"><i class="fa-brands fa-fort-awesome"></i></div>
-                        <span><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>环球影城 (USJ)</span>
-                        <span class="hanko-stamp text-[10px] bg-white border-white text-doraBlue shadow-none">1月24日</span>
-                    </div>
-                    <div class="p-4 bg-washi">
-                        <p class="text-sm mb-4 leading-relaxed text-gray-700">
-                            <strong class="text-doraRed">💡 冷知识：</strong> USJ 的哈利波特园区中的湖水中倒影的霍格沃茨城堡，其实是使用了特殊的黑色染料来增加水面的反射率，让城堡看起来更深邃神秘。<br><br>
-                            <strong class="text-doraBlue">🗺️ 攻略：</strong> 建议入园后立刻打开 App 抽取“任天堂世界”的整理券。
-                        </p>
-                        <div class="w-full h-64 bg-gray-100 rounded-lg overflow-hidden relative border-2 border-doraDark">
-                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=135.4286%2C34.6614%2C135.4366%2C34.6694&amp;layer=mapnik&amp;marker=34.6654%2C135.4323" style="border: 1px solid black"></iframe>
-                        </div>
-                        <div class="mt-2 text-xs text-center text-gray-400">大阪环球影城周边地图</div>
-                    </div>
-                </article>
-
-                <!-- Kiyomizu-dera Guide -->
-                <article class="dora-card p-0">
-                    <div class="bg-doraRed text-white p-3 font-bold flex justify-between items-center relative overflow-hidden">
-                        <div class="absolute right-0 top-0 text-6xl opacity-10 transform translate-x-2"><i class="fa-solid fa-archway"></i></div>
-                        <span><i class="fa-solid fa-torii-gate mr-2"></i>清水寺 & 三年坂</span>
-                        <span class="hanko-stamp text-[10px] bg-white border-white text-doraRed shadow-none">1月28日</span>
-                    </div>
-                    <div class="p-4 bg-washi">
-                        <p class="text-sm mb-4 leading-relaxed text-gray-700">
-                            <strong>🏯 历史背景：</strong> 清水寺的“清水舞台”没有使用任何一根钉子，而是利用日本传统的“悬造”工法搭建在悬崖上。<br><br>
-                            <strong>💧 传说：</strong> 在“音羽之泷”有三道泉水，分别代表<span class="text-doraBlue font-bold">学问</span>、<span class="text-pink-500 font-bold">恋爱</span>和<span class="text-green-600 font-bold">长寿</span>，据说只能选择其中一道饮用，贪心喝三道会失效喔！
-                        </p>
-                    </div>
-                </article>
+            <div class="mb-8"><h2 class="text-3xl font-bold text-doraBlue mb-2 text-center border-b-4 border-doraYellow inline-block px-6">深度导览手册</h2></div>
+            <div class="space-y-8">
                 
-                <!-- Dotonbori Guide -->
+                <!-- 1. Osaka Castle -->
                 <article class="dora-card p-0">
-                    <div class="bg-doraYellow text-doraDark p-3 font-bold flex justify-between items-center">
-                        <span><i class="fa-solid fa-utensils mr-2"></i>道顿堀美食战场</span>
-                        <span class="text-xs bg-white text-doraDark px-2 py-1 rounded-full border border-doraDark">多日行程</span>
+                    <div class="bg-doraBlue text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-brands fa-fort-awesome mr-2"></i>大阪城天守阁</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-doraBlue shadow-none">1/21</span>
                     </div>
-                    <div class="p-4 bg-washi">
-                        <p class="text-sm leading-relaxed text-gray-700">
-                            <strong>🏃 必看重点：</strong> 格力高（Glico）跑跑人看板已经换到第六代了！现在的看板背景是LED屏幕，会随着时间变化。<br><br>
-                            <strong>🥢 大阪烧 vs 广岛烧：</strong> 在这里吃的是“大阪烧”，特点是将所有材料混合在面糊里一起煎。别搞混啰！
-                        </p>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>📜 历史风云：</strong> 这里曾是丰臣秀吉统得天下的象征，后来在“大阪夏之阵”中被德川家康摧毁。现在的天守阁是1931年由市民集资重建的第三代建筑，内部是极其现代化的博物馆。</p>
+                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                <li><strong>必看：</strong> 8楼展望台可俯瞰整个大阪市景。</li>
+                                <li><strong>必拍：</strong> 护城河边的“极乐桥”是拍摄天守阁的最佳角度。</li>
+                                <li><strong>冷知识：</strong> 天守阁地下埋着一个“时空胶囊”，预定在5000年后（公元6970年）打开！</li>
+                            </ul>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5200%2C34.6850%2C135.5350%2C34.6900&amp;layer=mapnik&amp;marker=34.6873%2C135.5262"></iframe>
+                        </div>
                     </div>
                 </article>
+
+                <!-- 2. Nara Park -->
+                <article class="dora-card p-0">
+                    <div class="bg-green-600 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-paw mr-2"></i>奈良公园 & 东大寺</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-green-600 shadow-none">1/22</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🦌 神之使者：</strong> 这里的1200多只鹿都是野生的，被视为春日大社神明的使者。它们会向游客点头鞠躬讨要仙贝，非常有礼貌（但也很贪吃）。</p>
+                            <p class="mb-3"><strong>🙏 东大寺：</strong> 世界最大的木造建筑大佛殿，供奉着高15米的卢舍那佛。大佛鼻孔大小的柱洞，据说钻过去能保佑无病无灾。</p>
+                            <div class="bg-green-50 p-3 rounded-lg border border-green-100 text-sm">
+                                <strong class="text-doraBlue">⚠️ 喂鹿攻略：</strong> 
+                                <ol class="list-decimal pl-5 mt-2 space-y-1">
+                                    <li>不要逗鹿，它们可能会顶人或踢人。</li>
+                                    <li>喂完后摊开双手展示手心，表示“真的没有了”。</li>
+                                    <li>小心手中的地图和钞票，它们也吃纸！</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.8300%2C34.6800%2C135.8500%2C34.6900&amp;layer=mapnik&amp;marker=34.6850%2C135.8430"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3. Solaniwa Onsen -->
+                <article class="dora-card p-0">
+                    <div class="bg-orange-500 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-hot-tub-person mr-2"></i>空庭温泉</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-orange-500 shadow-none">1/22</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>♨️ 穿越时空：</strong> 关西最大的温泉主题公园！整体设计重现了安土桃山时代的繁华街景。入场包含免费的浴衣租赁，换上衣服后怎么拍都好看。</p>
+                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-orange-50 p-3 rounded-lg">
+                                <li><strong>天空庭园：</strong> 顶楼有巨大的日式庭园和足汤，可以一边泡脚一边欣赏庭园美景。</li>
+                                <li><strong>千本鸟居：</strong> 庭园内有红色的鸟居隧道，是必打卡的拍照点。</li>
+                                <li><strong>美食：</strong> 馆内有居酒屋风格的餐厅，泡完温泉喝一杯牛奶或啤酒是最高享受。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4. Kuromon Ichiba -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraYellow text-doraDark p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-fish-fins mr-2"></i>黑门市场</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-doraDark shadow-none">1/23</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🍣 大阪的厨房：</strong> 拥有近200年历史，全长近600米。这里不仅是当地主妇买菜的地方，更是游客狂吃海鲜的天堂。</p>
+                            <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
+                                <strong>🤤 必吃推荐：</strong>
+                                <ul class="list-disc pl-5 mt-2 space-y-1">
+                                    <li><strong>黑银金枪鱼店：</strong> 现切的大托罗（大肥），油脂丰富入口即化。</li>
+                                    <li><strong>烤海鲜：</strong> 手掌大的扇贝、生蚝、大虾，店家会现烤。</li>
+                                    <li><strong>高桥食品：</strong> 这里的浓厚豆浆和关东煮非常有名。</li>
+                                    <li><strong>草莓大福：</strong> 饭后甜点首选。</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5030%2C34.6630%2C135.5090%2C34.6680&amp;layer=mapnik&amp;marker=34.6655%2C135.5065"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5. USJ -->
+                <article class="dora-card p-0">
+                    <div class="bg-purple-600 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>环球影城 (USJ)</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-purple-600 shadow-none">1/24</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🍄 超级任天堂世界：</strong> 现实版的马里奥游戏世界！戴上能量手环，敲砖块、玩真人版马里奥赛车。记得要在App里抽“整理券”才能进入哦！</p>
+                            <p class="mb-3"><strong>⚡ 哈利波特魔法世界：</strong> 霍格沃茨城堡的还原度极高。“禁忌之旅”是必玩的室内过山车。一定要喝一杯黄油啤酒（无酒精）。</p>
+                            <p class="bg-purple-50 p-3 rounded-lg border border-purple-100 text-sm">
+                                <strong class="text-doraRed">💡 哆啦A梦的秘密：</strong> 园区的爆米花桶经常有期间限定款（如小黄人、鬼灭之刃、马里奥星星），是最好的纪念品，背在身上超级可爱！
+                            </p>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.4286%2C34.6614%2C135.4366%2C34.6694&amp;layer=mapnik&amp;marker=34.6654%2C135.4323"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6. Shinsekai & Tsutenkaku -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraYellow text-doraDark p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-tower-observation mr-2"></i>新世界 & 通天阁</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-doraDark shadow-none">1/25</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🏮 复古大阪：</strong> 这里保留了昭和时代的怀旧氛围，五颜六色的大招牌非常适合拍照。通天阁是这里的地标，被戏称为“大阪的埃菲尔铁塔”。</p>
+                            <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
+                                <strong>🍢 炸串文化 (Kushikatsu)：</strong>
+                                <p class="mt-1">新世界是炸串的发源地。吃炸串有一个绝对规则：<strong>“禁止二次蘸酱” (No Double Dipping)</strong>！因为酱汁是大家公用的。</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.5000%2C34.6500%2C135.5100%2C34.6550&amp;layer=mapnik&amp;marker=34.6525%2C135.5063"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 7. Harukas 300 -->
+                <article class="dora-card p-0">
+                    <div class="bg-sky-500 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-building mr-2"></i>阿倍野 HARUKAS</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-sky-500 shadow-none">1/25</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🏙️ 关西之巅：</strong> 300米高的日本第一高楼。58-60层是展望台，拥有360度落地玻璃。黄昏时分，可以看到夕阳落下大阪湾的绝美景色。</p>
+                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-sky-50 p-3 rounded-lg">
+                                <li><strong>天空庭园 (58F)：</strong> 露天的中庭，风可以直接吹进来，可以买关东煮和啤酒坐在这里吃。</li>
+                                <li><strong>天空洗手间：</strong> 全透明落地窗的厕所，体验在云端上厕所的刺激感！</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 8. Kannabe Highlands -->
+                <article class="dora-card p-0">
+                    <div class="bg-blue-300 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-person-skiing mr-2"></i>神锅高原滑雪</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-blue-300 shadow-none">1/26</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>❄️ 雪国秘境：</strong> 位于兵库县北部，这里的Up Kannabe滑雪场坡度平缓，非常适合家庭和初学者。</p>
+                            <p class="bg-blue-50 p-3 rounded-lg border border-blue-100 text-sm">
+                                <strong>🦀 冬季美食：</strong> 这里也是著名的“松叶蟹”产地。滑完雪后，回到民宿享用热腾腾的螃蟹火锅和但马牛料理，是冬天最奢侈的享受！
+                                <br><br>
+                                <strong>🌋 地质奇观：</strong> 神锅山其实是一座年轻的死火山，滑雪场的地形就是利用了火山口的斜坡。
+                            </p>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=134.6600%2C35.4800%2C134.7000%2C35.5200&amp;layer=mapnik&amp;marker=35.5000%2C134.6800"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 9. Sanjusangendo -->
+                <article class="dora-card p-0">
+                    <div class="bg-amber-700 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-vihara mr-2"></i>三十三间堂</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-amber-700 shadow-none">1/27</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>👀 视觉震撼：</strong> 全日本最狭长的木造建筑，内部供奉着<strong>1001尊</strong>千手观音立像，全部贴着金箔，整齐排列的景象令人屏息。</p>
+                            <p class="bg-amber-50 p-3 rounded-lg border border-amber-100 text-sm">
+                                <strong>🏹 通矢大赛：</strong> 这里每年1月都会举行传统的射箭比赛，因为大殿全长120米，古代武士会在这里比试谁能从一端射到另一端，是京都新年的风物诗。
+                                <br>
+                                <strong>注意：</strong> 堂内严禁摄影，请用心用眼去记录这神圣的画面。
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 10. Kiyomizu-dera -->
+                <article class="dora-card p-0">
+                    <div class="bg-doraRed text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-torii-gate mr-2"></i>清水寺 & 三年坂</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-doraRed shadow-none">1/28</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🏯 清水舞台：</strong> 本堂前方悬空的木造舞台，由139根巨大的榉木柱支撑，没用一根钉子。这里可以眺望京都市全景。</p>
+                            <div class="bg-red-50 p-3 rounded-lg border border-red-100 text-sm">
+                                <strong>💧 音羽之瀑：</strong> 寺庙下方有三道泉水，分别代表：
+                                <ul class="flex gap-3 mt-2 justify-center font-bold text-center">
+                                    <li class="bg-blue-100 px-3 py-1 rounded text-blue-600">学问</li>
+                                    <li class="bg-pink-100 px-3 py-1 rounded text-pink-600">恋爱</li>
+                                    <li class="bg-green-100 px-3 py-1 rounded text-green-600">长寿</li>
+                                </ul>
+                                <p class="mt-2 text-center text-gray-500">只能选一道喝，贪心喝三道会失效哦！</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.7800%2C34.9900%2C135.7900%2C35.0000&amp;layer=mapnik&amp;marker=34.9949%2C135.7850"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 11. Arashiyama -->
+                <article class="dora-card p-0">
+                    <div class="bg-teal-600 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-tree mr-2"></i>岚山 & 竹林</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-teal-600 shadow-none">1/29</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🌉 渡月桥：</strong> 岚山的象征，横跨桂川。名字美意为“似满月过桥”。</p>
+                            <p class="mb-3"><strong>🎍 竹林小径：</strong> 通往天龙寺北侧的竹林隧道，是《卧虎藏龙》般的意境。清晨前往可以避开人潮，听到风吹竹叶的沙沙声。</p>
+                            <p class="bg-teal-50 p-3 rounded-lg border border-teal-100 text-sm">
+                                <strong>⛩️ 野宫神社：</strong> 竹林里的小神社，据说求姻缘和学业非常灵验。这里的鸟居是日本少见的黑色树皮原木鸟居。
+                            </p>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.6600%2C35.0050%2C135.6800%2C35.0150&amp;layer=mapnik&amp;marker=35.0094%2C135.6668"></iframe>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 12. Rinku Town -->
+                <article class="dora-card p-0">
+                    <div class="bg-pink-500 text-white p-4 font-bold flex justify-between items-center text-lg">
+                        <span><i class="fa-solid fa-bag-shopping mr-2"></i>临空城 Outlet</span>
+                        <span class="hanko-stamp text-xs bg-white border-white text-pink-500 shadow-none">1/29</span>
+                    </div>
+                    <div class="p-5 bg-washi">
+                        <div class="mb-4 text-base text-gray-700 leading-relaxed">
+                            <p class="mb-3"><strong>🛍️ 最后的血拼：</strong> 距离关西机场仅一站之遥。这里有200多家店铺，建筑风格模仿美国查尔斯顿港口城市，风景优美。</p>
+                            <ul class="list-disc pl-5 mt-3 space-y-2 text-sm text-gray-600 bg-pink-50 p-3 rounded-lg">
+                                <li><strong>品牌：</strong> 运动品牌 (Nike, Adidas)、日系服饰 (Beams, Urban Research) 经常有惊人折扣。</li>
+                                <li><strong>Seacle 摩天轮：</strong> 85米高的大摩天轮，可以眺望大海和机场起降的飞机。</li>
+                                <li><strong>补给：</strong> 旁边的 Trial 超市是24小时营业的，非常适合最后补买零食、药妆。</li>
+                            </ul>
+                        </div>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-doraDark">
+                             <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=135.2900%2C34.4050%2C135.3100%2C34.4150&amp;layer=mapnik&amp;marker=34.4100%2C135.3000"></iframe>
+                        </div>
+                    </div>
+                </article>
+
             </div>
         </section>
 
-        <!-- ==================== WALLET SECTION ==================== -->
+        <!-- WALLET SECTION -->
         <section id="wallet" class="view-section">
-            <div class="mb-4">
-                <h2 class="text-2xl font-bold text-doraBlue mb-2 text-center">百宝袋记账本</h2>
-                <p class="text-sm text-gray-500 text-center">自动换算汇率，控制预算</p>
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-doraBlue mb-2 text-center">AI 记账本</h2>
+                <p class="text-base text-gray-500 text-center">自动辨识收据，聪明记账</p>
             </div>
 
-            <!-- Calculator -->
-            <div class="dora-card p-4 mb-6 bg-gradient-to-br from-white to-blue-50">
-                <h3 class="font-bold text-doraBlue mb-2 flex items-center">
-                    <span class="w-6 h-6 rounded-full bg-doraBlue text-white flex items-center justify-center mr-2 text-xs"><i class="fa-solid fa-calculator"></i></span>
-                    汇率计算器
-                </h3>
-                <div class="flex items-center gap-2 mb-2 bg-blue-100/50 p-2 rounded-lg">
-                    <label class="text-xs text-doraBlue font-bold">汇率 (100日元兑MYR):</label>
-                    <input type="number" id="exchangeRate" value="2.70" class="border-2 border-white shadow-sm rounded px-2 py-1 w-20 text-center text-sm font-bold text-doraRed outline-none focus:border-doraBlue" onchange="updateCalc()">
-                </div>
-                <div class="grid grid-cols-5 gap-2 items-center">
-                    <div class="col-span-2">
-                        <input type="number" id="calcInput" placeholder="日元" class="w-full border-2 border-doraBlue rounded-xl p-2 text-lg font-bold text-right focus:ring-2 focus:ring-blue-200 outline-none">
-                    </div>
-                    <div class="col-span-1 text-center text-gray-400">
-                        <i class="fa-solid fa-arrow-right-long"></i>
-                    </div>
-                    <div class="col-span-2 relative">
-                        <div id="calcResult" class="w-full bg-doraYellow border-2 border-doraDark rounded-xl p-2 text-lg font-bold text-right text-doraDark shadow-[2px_2px_0px_#333]">RM 0.00</div>
-                    </div>
+            <!-- Rate -->
+            <div class="dora-card p-4 mb-6 bg-gradient-to-r from-blue-50 to-white flex justify-between items-center">
+                <label class="text-base text-doraBlue font-bold">汇率 (100日元):</label>
+                <div class="flex items-center">
+                    <input type="number" id="exchangeRate" value="2.70" class="border-b-2 border-doraBlue text-center w-20 bg-transparent font-bold text-doraRed text-lg outline-none" onchange="updateCalc()">
+                    <span class="text-sm ml-2 font-bold">MYR</span>
                 </div>
             </div>
 
-            <!-- Expense Form -->
-            <div class="dora-card p-4 mb-6">
-                <h3 class="font-bold text-doraRed mb-3 flex items-center">
-                    <i class="fa-solid fa-pen-nib mr-2"></i>新增支出
-                </h3>
-                <div class="grid grid-cols-1 gap-3">
-                    <input type="text" id="expenseItem" placeholder="品项名称 (如: 拉面)" class="border rounded-lg p-2 w-full focus:border-doraBlue outline-none">
-                    <input type="number" id="expenseAmount" placeholder="日元金额" class="border rounded-lg p-2 w-full focus:border-doraBlue outline-none">
+            <!-- AI Expense Form -->
+            <div class="dora-card p-5 mb-8 relative">
+                <div id="scanLoading" class="absolute inset-0 bg-white/90 z-20 hidden flex-col items-center justify-center">
+                    <div class="spinner mb-3"></div>
+                    <p class="text-doraBlue text-lg font-bold animate-pulse">正在吃记忆吐司...</p>
+                    <p class="text-sm text-gray-500">AI 分析收据中</p>
+                </div>
+
+                <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
+                <div class="grid grid-cols-1 gap-4">
                     
-                    <div class="flex items-center gap-2">
-                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border border-dashed border-gray-300 px-4 py-3 rounded-lg text-sm flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition">
-                            <i class="fa-solid fa-camera mr-1"></i> 上传收据/照片
+                    <!-- Photo Upload Area -->
+                    <div class="flex gap-3">
+                        <label for="expensePhoto" class="cursor-pointer bg-gray-50 text-gray-600 border border-dashed border-gray-300 px-3 py-4 rounded-xl text-base flex-1 text-center hover:bg-blue-50 hover:border-doraBlue hover:text-doraBlue transition flex flex-col justify-center items-center">
+                            <i class="fa-solid fa-camera text-2xl mb-2"></i>
+                            <span id="photoStatusText" class="text-sm">1. 拍收据</span>
                         </label>
+                        <!-- AI Scan Button -->
+                        <button onclick="scanReceipt()" class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl px-4 py-3 flex flex-col justify-center items-center shadow-md active:scale-95 transition w-28">
+                            <i class="fa-solid fa-wand-magic-sparkles text-2xl mb-1 text-yellow-300"></i>
+                            <span class="text-sm font-bold">2. AI 辨识</span>
+                        </button>
                         <input type="file" id="expensePhoto" accept="image/*" class="hidden" onchange="handlePhotoSelect(this)">
-                        <span id="photoFileName" class="text-xs text-gray-400 truncate max-w-[100px]">未选择</span>
                     </div>
 
-                    <button onclick="addExpense()" class="dora-btn py-3 w-full font-bold text-lg mt-2 flex items-center justify-center">
+                    <div class="flex gap-3 mt-2">
+                        <input type="text" id="expenseItem" placeholder="品项 (AI 自动填)" class="border-2 border-gray-200 rounded-xl p-3 flex-[2] text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
+                        <input type="number" id="expenseAmount" placeholder="金额" class="border-2 border-gray-200 rounded-xl p-3 flex-1 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
+                    </div>
+
+                    <button onclick="addExpense()" class="dora-btn py-4 w-full font-bold text-xl mt-3 flex items-center justify-center shadow-lg">
                         <i class="fa-solid fa-check mr-2"></i> 记上一笔
                     </button>
                 </div>
             </div>
 
-            <!-- Chart Visualization -->
-            <div class="dora-card p-4 mb-6">
-                <h3 class="font-bold text-doraBlue mb-2">支出分析</h3>
-                <div class="chart-container">
-                    <canvas id="expenseChart"></canvas>
-                </div>
+            <!-- Chart & List -->
+            <div class="dora-card p-5 mb-8">
+                <div class="chart-container"><canvas id="expenseChart"></canvas></div>
             </div>
-
-            <!-- History List -->
-            <div class="bg-white/50 p-4 rounded-2xl border border-white/60">
-                <h3 class="font-bold text-gray-700 mb-2 flex items-center">
-                    <i class="fa-solid fa-clock-rotate-left mr-2 text-doraBlue"></i>记账记录
-                </h3>
-                <div id="expenseList" class="space-y-3">
-                    <!-- JS Populated -->
+            <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
+                <div id="expenseList" class="space-y-4"></div>
+                <div class="mt-6 text-right bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <span class="text-base text-gray-500">总计: </span>
+                    <span id="totalJpy" class="font-bold text-xl mr-3 text-doraDark">¥0</span>
+                    <span id="totalMyr" class="font-bold text-doraRed text-2xl">RM 0.00</span>
                 </div>
-                <div class="mt-4 text-right bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                    <span class="text-sm text-gray-500">总计: </span>
-                    <span id="totalJpy" class="font-bold text-lg mr-2 text-doraDark">¥0</span>
-                    <span id="totalMyr" class="font-bold text-doraRed text-xl">RM 0.00</span>
-                </div>
-                <button onclick="clearExpenses()" class="text-xs text-red-400 underline mt-4 w-full text-center">清除所有记录</button>
+                <button onclick="clearExpenses()" class="text-sm text-red-400 underline mt-6 w-full text-center py-2">清除所有记录</button>
             </div>
         </section>
 
-        <!-- ==================== LISTS SECTION ==================== -->
+        <!-- LISTS SECTION -->
         <section id="lists" class="view-section">
-            <!-- Tabs -->
-            <div class="flex mb-6 bg-white rounded-full p-1 border-2 border-doraBlue/20 shadow-sm">
-                <button onclick="switchListTab('checklist')" id="tab-checklist" class="flex-1 py-2 rounded-full text-sm font-bold bg-doraBlue text-white transition-all shadow-md">行前清单</button>
-                <button onclick="switchListTab('memo')" id="tab-memo" class="flex-1 py-2 rounded-full text-sm font-bold text-gray-500 hover:bg-gray-100 transition-all">个人备忘录</button>
+            <div class="flex mb-8 bg-white rounded-full p-1.5 border-2 border-doraBlue/20 shadow-sm">
+                <button onclick="switchListTab('checklist')" id="tab-checklist" class="flex-1 py-3 rounded-full text-base font-bold bg-doraBlue text-white shadow-md transition-all">行前清单</button>
+                <button onclick="switchListTab('memo')" id="tab-memo" class="flex-1 py-3 rounded-full text-base font-bold text-gray-500 transition-all">个人备忘录</button>
             </div>
-
-            <!-- Checklist View -->
             <div id="view-checklist">
-                <div class="dora-card p-4 bg-washi">
-                    <h3 class="font-bold text-doraBlue mb-3 flex items-center"><i class="fa-solid fa-suitcase-rolling mr-2"></i> 必备物品</h3>
-                    <div class="flex gap-2 mb-4">
-                        <input type="text" id="newCheckItem" placeholder="新增物品..." class="border rounded-lg p-2 flex-1 focus:border-doraBlue outline-none">
-                        <button onclick="addCheckItem()" class="bg-doraYellow border-2 border-doraDark text-doraDark font-bold px-4 rounded-lg hover:translate-y-1 transition-transform"><i class="fa-solid fa-plus"></i></button>
+                <div class="dora-card p-5 bg-washi">
+                    <div class="flex gap-3 mb-6">
+                        <input type="text" id="newCheckItem" placeholder="新增物品..." class="border-2 border-gray-200 rounded-xl p-3 flex-1 text-base focus:border-doraBlue outline-none">
+                        <button onclick="addCheckItem()" class="bg-doraYellow border-2 border-doraDark text-doraDark px-6 rounded-xl text-lg hover:translate-y-1 transition"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <ul id="checklistContainer" class="space-y-2">
-                        <!-- JS populated -->
-                    </ul>
+                    <ul id="checklistContainer" class="space-y-3"></ul>
                 </div>
             </div>
-
-            <!-- Memo View -->
             <div id="view-memo" class="hidden">
-                <div class="dora-card p-4 bg-washi">
-                    <h3 class="font-bold text-doraRed mb-3 flex items-center"><i class="fa-solid fa-pen-to-square mr-2"></i> 随手笔记</h3>
-                    <div class="mb-4">
-                        <textarea id="newMemoContent" rows="3" placeholder="输入文字或网址..." class="w-full border rounded-lg p-2 mb-2 focus:border-doraRed outline-none bg-yellow-50/50"></textarea>
-                        <button onclick="addMemo()" class="dora-btn py-2 w-full text-sm">新增笔记</button>
+                <div class="dora-card p-5 bg-washi">
+                    <div class="mb-6">
+                        <textarea id="newMemoContent" rows="4" placeholder="输入文字..." class="w-full border-2 border-gray-200 rounded-xl p-3 mb-3 text-base bg-yellow-50/50 focus:border-doraYellow outline-none"></textarea>
+                        <button onclick="addMemo()" class="dora-btn py-3 w-full text-base">新增笔记</button>
                     </div>
-                    <div id="memoContainer" class="space-y-3">
-                        <!-- JS populated -->
-                    </div>
+                    <div id="memoContainer" class="space-y-4"></div>
                 </div>
             </div>
         </section>
 
-        <!-- ==================== INFO SECTION ==================== -->
+        <!-- INFO SECTION -->
         <section id="info" class="view-section">
-            <h2 class="text-2xl font-bold text-doraBlue mb-6 text-center relative">
-                <span class="relative z-10">旅游小帮手</span>
-                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-3 bg-doraYellow/50 -z-0 rounded-full"></span>
-            </h2>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Weather -->
-                <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center active:scale-95 transition bg-white group hover:border-doraYellow">
-                    <i class="fa-solid fa-cloud-sun text-4xl text-doraBlue mb-2 group-hover:scale-110 transition-transform"></i>
-                    <span class="font-bold text-doraDark">天气预报</span>
-                    <span class="text-xs text-gray-400">日本气象厅</span>
+            <h2 class="text-3xl font-bold text-doraBlue mb-8 text-center">旅游小帮手</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-5 flex flex-col items-center justify-center h-40 text-center group hover:border-doraBlue transition">
+                    <i class="fa-solid fa-cloud-sun text-5xl text-doraBlue mb-3 group-hover:scale-110 transition"></i>
+                    <span class="font-bold text-lg">天气预报</span>
                 </a>
-
-                <!-- Emergency -->
-                <div class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center bg-red-50 border-doraRed">
-                    <i class="fa-solid fa-truck-medical text-3xl text-doraRed mb-2 animate-pulse"></i>
-                    <span class="font-bold text-doraRed">紧急电话</span>
-                    <span class="text-xs text-gray-500 font-bold">警110 / 救119</span>
-                </div>
-
-                <!-- Embassay -->
-                <a href="https://www.kln.gov.my/web/jpn_tokyo/home" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center active:scale-95 transition">
-                    <i class="fa-solid fa-building-flag text-3xl text-doraDark mb-2"></i>
-                    <span class="font-bold">办事处</span>
-                    <span class="text-xs text-gray-400">大马驻日使馆</span>
-                </a>
-
-                <!-- Hotel Info (Dynamic) -->
-                <div onclick="alert('京都花开酒店: 075-123-4567\nMinn十三: 06-123-4567')" class="dora-card p-4 flex flex-col items-center justify-center h-32 text-center cursor-pointer active:scale-95 transition hover:bg-yellow-50">
-                    <i class="fa-solid fa-hotel text-3xl text-doraYellow mb-2 drop-shadow-sm"></i>
-                    <span class="font-bold">住宿电话</span>
-                    <span class="text-xs text-gray-400">点击查看</span>
+                <div class="dora-card p-5 flex flex-col items-center justify-center h-40 text-center bg-red-50 border-doraRed">
+                    <i class="fa-solid fa-truck-medical text-4xl text-doraRed mb-3 animate-pulse"></i>
+                    <span class="font-bold text-lg text-doraRed">紧急电话</span>
+                    <span class="text-base font-bold text-doraRed mt-1">110 / 119</span>
                 </div>
             </div>
-
-            <!-- Rules Card -->
-            <div class="dora-card p-5 mt-6 border-l-8 border-gray-400">
-                <h3 class="font-bold text-doraDark mb-3 border-b pb-2 flex items-center">
-                    <i class="fa-solid fa-triangle-exclamation text-doraYellow mr-2"></i>注意事项
+             <!-- Rules Card -->
+             <div class="dora-card p-6 mt-8 border-l-8 border-gray-400">
+                <h3 class="font-bold text-doraDark text-lg mb-4 border-b pb-3 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation text-doraYellow mr-3"></i>注意事项
                 </h3>
-                <ul class="list-disc list-inside text-sm space-y-2 text-gray-600">
+                <ul class="list-disc list-inside text-base space-y-3 text-gray-600">
                     <li>日本街道<strong>禁止边走边吃</strong>。</li>
                     <li>搭乘电车请将手机设为静音，<strong>禁止通话</strong>。</li>
                     <li>入境日本请勿携带<strong>肉类制品</strong>及新鲜蔬果。</li>
@@ -449,42 +574,145 @@
                 </ul>
             </div>
         </section>
-
     </main>
 
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeApiKeyModal()" class="absolute top-2 right-4 text-3xl cursor-pointer text-gray-400 hover:text-red-500">&times;</span>
+            <h2 class="text-2xl font-bold text-doraBlue mb-6 text-center">输入 Gemini API Key</h2>
+            <p class="text-base text-gray-600 mb-6">为了启用 AI 收据辨识和哆啦A梦聊天功能，请输入您的 Google Gemini API Key。</p>
+            <input type="password" id="inputApiKey" placeholder="AIzaSy..." class="w-full border-2 border-gray-300 rounded-xl p-3 mb-6 text-base">
+            <button onclick="saveApiKey()" class="dora-btn w-full py-3 font-bold text-lg">保存 Key</button>
+            <p class="text-sm text-gray-400 mt-4 text-center">Key 仅保存在您的浏览器中。</p>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content" style="height: 85vh; max-height: 700px; display: flex; flex-direction: column;">
+            <span onclick="toggleChat()" class="absolute top-3 right-5 text-3xl cursor-pointer z-10 text-gray-400 hover:text-red-500">&times;</span>
+            <div class="text-center border-b pb-3 mb-3">
+                <div class="w-20 h-20 mx-auto bg-doraBlue rounded-full border-4 border-white shadow-lg flex items-center justify-center mb-2 overflow-hidden">
+                    <img src="https://api.iconify.design/noto:robot.svg" alt="Doraemon" class="w-14 h-14">
+                </div>
+                <h2 class="font-bold text-xl text-doraBlue">哆啦A梦 旅游顾问</h2>
+            </div>
+            
+            <div id="chatHistory" class="flex-1 overflow-y-auto p-3 space-y-4 bg-gray-50 rounded-xl mb-3 text-base">
+                <div class="flex gap-2">
+                    <div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%] text-gray-700">
+                        你好！我是哆啦A梦。关于这次日本之旅，有什么我可以帮你的吗？
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <input type="text" id="chatInput" placeholder="问问附近有什么好吃的..." class="flex-1 border-2 border-doraBlue rounded-full px-5 py-3 text-base outline-none shadow-sm">
+                <button onclick="sendChat()" class="bg-doraBlue text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md active:scale-90 transition text-xl">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <button onclick="toggleChat()" class="fixed bottom-28 right-5 bg-doraBlue text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center border-4 border-white z-40 active:scale-95 transition animate-bounce">
+        <i class="fa-solid fa-comments text-3xl"></i>
+    </button>
+
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-2 px-2 shadow-[0_-5px_15px_rgba(0,0,0,0.08)] z-50 rounded-t-3xl">
-        <div class="max-w-2xl mx-auto flex justify-around items-center h-16">
-            <button onclick="switchView('plan')" class="nav-btn active flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="plan">
-                <i class="fa-solid fa-calendar-days text-xl mb-1"></i>
-                <span class="text-[10px] font-bold">行程</span>
+    <nav class="fixed bottom-0 w-full bg-white border-t-2 border-gray-100 pb-safe pt-3 px-3 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] z-50 rounded-t-3xl h-24">
+        <div class="max-w-2xl mx-auto flex justify-around items-center h-full pb-2">
+            <button onclick="switchView('plan')" class="nav-btn active flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="plan">
+                <i class="fa-solid fa-calendar-days text-2xl mb-1"></i>
+                <span class="text-xs font-bold">行程</span>
             </button>
-            <button onclick="switchView('guide')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="guide">
-                <i class="fa-solid fa-book-open text-xl mb-1"></i>
-                <span class="text-[10px] font-bold">导览</span>
+            <button onclick="switchView('guide')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="guide">
+                <i class="fa-solid fa-book-open text-2xl mb-1"></i>
+                <span class="text-xs font-bold">导览</span>
             </button>
             
-            <!-- Center Button (Wallet) -->
-            <button onclick="switchView('wallet')" class="nav-btn relative -top-6 bg-doraBlue text-white rounded-full w-16 h-16 flex items-center justify-center border-4 border-white shadow-xl transform transition active:scale-95 active:rotate-12" data-target="wallet">
-                <i class="fa-solid fa-wallet text-2xl"></i>
+            <button onclick="switchView('wallet')" class="nav-btn relative -top-8 bg-doraBlue text-white rounded-full w-20 h-20 flex items-center justify-center border-4 border-white shadow-2xl transition transform active:scale-95" data-target="wallet">
+                <i class="fa-solid fa-wallet text-3xl"></i>
             </button>
 
-            <button onclick="switchView('lists')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="lists">
-                <i class="fa-solid fa-list-check text-xl mb-1"></i>
-                <span class="text-[10px] font-bold">清单</span>
+            <button onclick="switchView('lists')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="lists">
+                <i class="fa-solid fa-list-check text-2xl mb-1"></i>
+                <span class="text-xs font-bold">清单</span>
             </button>
-            <button onclick="switchView('info')" class="nav-btn flex flex-col items-center justify-center w-14 text-gray-400 hover:text-doraBlue transition-colors" data-target="info">
-                <i class="fa-solid fa-circle-info text-xl mb-1"></i>
-                <span class="text-[10px] font-bold">资讯</span>
+            <button onclick="switchView('info')" class="nav-btn flex flex-col items-center justify-center w-16 text-gray-400 hover:text-doraBlue transition" data-target="info">
+                <i class="fa-solid fa-circle-info text-2xl mb-1"></i>
+                <span class="text-xs font-bold">资讯</span>
             </button>
         </div>
     </nav>
 
-    <!-- Hidden Canvas for Image Processing -->
     <canvas id="imgCanvas" style="display: none;"></canvas>
 
     <script>
-        // --- DATA & STATE ---
+        // --- JS LOGIC (UPDATED FOR LARGE FONTS) ---
+        
+        function getApiKey() {
+            const key = localStorage.getItem('dora_gemini_key');
+            if (!key) { openApiKeyModal(); return null; }
+            return key;
+        }
+        function openApiKeyModal() { document.getElementById('apiKeyModal').style.display = 'block'; }
+        function closeApiKeyModal() { document.getElementById('apiKeyModal').style.display = 'none'; }
+        function saveApiKey() {
+            const key = document.getElementById('inputApiKey').value.trim();
+            if (key) { localStorage.setItem('dora_gemini_key', key); closeApiKeyModal(); alert("API Key 已保存！"); }
+        }
+
+        async function callGemini(prompt, imageBase64 = null) {
+            const apiKey = getApiKey();
+            if (!apiKey) return null;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const parts = [{ text: prompt }];
+            if (imageBase64) { parts.push({ inline_data: { mime_type: "image/jpeg", data: imageBase64.split(',')[1] } }); }
+            try {
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: parts }] }) });
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) { alert("AI 呼叫失败: " + error.message); return null; }
+        }
+
+        async function scanReceipt() {
+            if (!tempPhotoBase64) { alert("请先拍摄或上传收据照片！"); return; }
+            document.getElementById('scanLoading').style.display = 'flex';
+            const prompt = `You are a receipt scanner. Extract TOTAL amount (integer Yen) and MAIN item name (Simplified Chinese). Return JSON: { "item": "String", "amount": Number }`;
+            const result = await callGemini(prompt, tempPhotoBase64);
+            document.getElementById('scanLoading').style.display = 'none';
+            if (result) {
+                try {
+                    const data = JSON.parse(result.replace(/```json/g, '').replace(/```/g, '').trim());
+                    document.getElementById('expenseItem').value = data.item;
+                    document.getElementById('expenseAmount').value = data.amount;
+                } catch (e) { alert("无法辨识，请手动输入。"); }
+            }
+        }
+
+        function toggleChat() { const m = document.getElementById('chatModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+        
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const history = document.getElementById('chatHistory');
+            history.innerHTML += `<div class="flex gap-2 justify-end"><div class="bg-doraBlue text-white p-3 rounded-l-xl rounded-br-xl shadow-sm max-w-[85%]">${text}</div></div>`;
+            input.value = ''; history.scrollTop = history.scrollHeight;
+            const loadingId = 'loading-' + Date.now();
+            history.innerHTML += `<div id="${loadingId}" class="flex gap-2"><div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm"><i class="fa-solid fa-ellipsis animate-bounce"></i></div></div>`;
+            history.scrollTop = history.scrollHeight;
+            const reply = await callGemini(`You are Doraemon guide. Reply in Simplified Chinese. User: ${text}`);
+            document.getElementById(loadingId).remove();
+            if (reply) {
+                history.innerHTML += `<div class="flex gap-2"><div class="bg-white border border-gray-200 p-3 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%] prose prose-base">${marked.parse(reply)}</div></div>`;
+                history.scrollTop = history.scrollHeight;
+            }
+        }
+
         const tripData = [
             { date: "1/21", day: "日", title: "抵达 & 大阪城", hotel: "大阪 Minn 十三", color: "border-doraBlue", events: [
                 { time: "AM", text: "抵达关西机场，前往 Minn 十三 寄行李", type: "move" },
@@ -538,7 +766,6 @@
             ]}
         ];
 
-        // Default Checklist (Updated: Removed Sim/Roaming and Toothbrush)
         const defaultChecklist = [
             { text: "护照 & 机票凭证", done: false },
             { text: "Visit Japan Web 填写", done: false },
@@ -548,29 +775,21 @@
             { text: "个人药品", done: false }
         ];
 
-        // --- DOM ELEMENTS & INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             renderTimeline();
             initWallet();
             initLists();
-            switchView('plan'); // Start on Plan
+            switchView('plan');
+            document.getElementById('chatInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') sendChat(); });
         });
 
-        // --- VIEW SWITCHING ---
         function switchView(viewId) {
-            // Hide all sections
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Show target
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
-            // Update Nav styles
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 if(btn.dataset.target === viewId) {
                     btn.classList.add('text-doraBlue');
                     btn.classList.remove('text-gray-400');
-                    // Add bounce animation
                     btn.querySelector('i').classList.add('animate-bounce');
                     setTimeout(() => btn.querySelector('i').classList.remove('animate-bounce'), 1000);
                 } else {
@@ -578,22 +797,17 @@
                     btn.classList.add('text-gray-400');
                 }
             });
-
             window.scrollTo(0,0);
         }
 
-        // --- PLAN RENDER LOGIC ---
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             let html = '';
-
             tripData.forEach(day => {
                 let eventsHtml = '';
                 day.events.forEach(evt => {
                     let icon = 'fa-circle-small';
                     let colorClass = 'text-gray-500';
-                    let linkHtml = '';
-
                     if(evt.type === 'move') { icon = 'fa-train-subway'; colorClass = 'text-doraBlue'; }
                     if(evt.type === 'spot') { icon = 'fa-camera'; colorClass = 'text-doraRed'; }
                     if(evt.type === 'food') { icon = 'fa-utensils'; colorClass = 'text-orange-500'; }
@@ -601,106 +815,62 @@
                     if(evt.type === 'play') { icon = 'fa-ticket'; colorClass = 'text-purple-500'; }
                     if(evt.type === 'warn') { icon = 'fa-exclamation-circle'; colorClass = 'text-red-600 font-bold'; }
                     if(evt.type === 'fly')  { icon = 'fa-plane'; colorClass = 'text-doraBlue'; }
-
-                    if(evt.link) {
-                        const query = encodeURIComponent(evt.link);
-                        linkHtml = `<a href="https://www.google.com/maps/search/?api=1&query=${query}" target="_blank" class="ml-2 text-doraBlue text-[10px] border border-doraBlue px-2 py-0.5 rounded-full hover:bg-doraBlue hover:text-white transition"><i class="fa-solid fa-map-location-dot"></i> 地图</a>`;
-                    }
+                    let linkHtml = evt.link ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.link)}" target="_blank" class="ml-2 text-doraBlue text-xs border border-doraBlue px-2 py-0.5 rounded-full"><i class="fa-solid fa-map-location-dot"></i> 地图</a>` : '';
 
                     eventsHtml += `
-                        <div class="flex items-start mb-3 last:mb-0">
-                            <div class="w-12 text-xs font-bold text-gray-400 pt-1 text-right mr-3 flex-shrink-0 font-mono">${evt.time}</div>
-                            <div class="flex-1 pb-3 border-b border-dashed border-gray-200 last:border-0 relative">
-                                <div class="absolute -left-[19px] top-1.5 w-2 h-2 rounded-full bg-white border-2 border-gray-300"></div>
-                                <div class="text-sm ${colorClass}">
-                                    <i class="fa-solid ${icon} mr-1"></i>
-                                    <span class="text-gray-800">${evt.text}</span>
-                                    ${linkHtml}
-                                </div>
+                        <div class="flex items-start mb-4 last:mb-0">
+                            <div class="w-14 text-sm font-bold text-gray-400 pt-1 text-right mr-3 flex-shrink-0 font-mono">${evt.time}</div>
+                            <div class="flex-1 pb-4 border-b border-dashed border-gray-200 last:border-0 relative">
+                                <div class="absolute -left-[23px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-gray-300"></div>
+                                <div class="text-base ${colorClass}"><i class="fa-solid ${icon} mr-1"></i><span class="text-gray-800">${evt.text}</span>${linkHtml}</div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
-
                 html += `
-                    <div class="dora-card mb-4 relative overflow-hidden group">
-                        <div class="bg-gradient-to-r from-gray-50 to-white p-3 border-b border-gray-100 flex justify-between items-center">
-                            <div class="flex items-center gap-3">
-                                <div class="hanko-stamp shadow-sm group-hover:shadow-md transition-shadow">
-                                    <span class="text-[10px] opacity-70">1月</span>
-                                    <span class="text-lg font-bold leading-none">${day.date.split('/')[1]}</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-700 text-sm">${day.title}</h3>
-                                    <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 rounded">周${day.day}</span>
-                                </div>
+                    <div class="dora-card mb-6 relative overflow-hidden group">
+                        <div class="bg-gradient-to-r from-gray-50 to-white p-4 border-b border-gray-100 flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <div class="hanko-stamp shadow-sm"><span class="text-xs opacity-70">1月</span><span class="text-xl font-bold leading-none">${day.date.split('/')[1]}</span></div>
+                                <div><h3 class="font-bold text-gray-700 text-lg">${day.title}</h3><span class="text-xs text-gray-400 bg-gray-100 px-2 rounded">周${day.day}</span></div>
                             </div>
                         </div>
-                        <div class="p-4 bg-white/80 bg-washi">
-                            ${eventsHtml}
-                            <div class="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-500 flex items-center">
-                                <i class="fa-solid fa-bed mr-2 text-doraBlue"></i> ${day.hotel}
-                            </div>
-                        </div>
-                        <div class="absolute left-0 top-0 bottom-0 w-1 ${day.color.replace('border', 'bg')}"></div>
-                    </div>
-                `;
+                        <div class="p-5 bg-washi">${eventsHtml}<div class="mt-4 pt-3 border-t border-gray-100 text-sm text-gray-500"><i class="fa-solid fa-bed mr-2 text-doraBlue"></i> ${day.hotel}</div></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 ${day.color.replace('border', 'bg')}"></div>
+                    </div>`;
             });
-
             container.innerHTML = html;
         }
 
-        // --- WALLET LOGIC ---
         let expenseChartInstance = null;
-
         function initWallet() {
-            // Load Rate
             const savedRate = localStorage.getItem('travelApp_rate');
             if(savedRate) document.getElementById('exchangeRate').value = savedRate;
-
-            // Load Expenses
             renderExpenses();
-            updateCalc(); // Init calc result
-            
-            // Enter key on calc
-            document.getElementById('calcInput').addEventListener('keyup', (e) => {
-                updateCalc();
-            });
+            updateCalc();
         }
-
         function updateCalc() {
             const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
-            const jpy = parseFloat(document.getElementById('calcInput').value) || 0;
-            const myr = (jpy / 100) * rate;
-            
-            document.getElementById('calcResult').innerText = `RM ${myr.toFixed(2)}`;
             localStorage.setItem('travelApp_rate', rate);
         }
-
+        
         let tempPhotoBase64 = null;
-
         function handlePhotoSelect(input) {
             const file = input.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    // Compress using Canvas
                     const canvas = document.getElementById('imgCanvas');
                     const ctx = canvas.getContext('2d');
-                    const maxWidth = 300; // Resize to max 300px width for storage
+                    const maxWidth = 500; 
                     const scaleSize = maxWidth / img.width;
                     canvas.width = maxWidth;
                     canvas.height = img.height * scaleSize;
-                    
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
-                    
-                    document.getElementById('photoFileName').innerText = "照片已准备";
-                    document.getElementById('photoFileName').classList.remove('text-gray-400');
-                    document.getElementById('photoFileName').classList.add('text-doraBlue', 'font-bold');
+                    tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    document.getElementById('photoStatusText').innerText = "已就绪";
+                    document.getElementById('photoStatusText').classList.add('text-green-600', 'font-bold');
                 }
                 img.src = e.target.result;
             }
@@ -710,31 +880,15 @@
         function addExpense() {
             const item = document.getElementById('expenseItem').value;
             const amount = parseFloat(document.getElementById('expenseAmount').value);
-            
-            if(!item || isNaN(amount)) {
-                alert("请输入项目和金额");
-                return;
-            }
-
+            if(!item || isNaN(amount)) { alert("请输入项目和金额"); return; }
             const expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
-            expenses.push({
-                id: Date.now(),
-                date: new Date().toLocaleDateString(),
-                item: item,
-                amount: amount,
-                photo: tempPhotoBase64
-            });
-
+            expenses.push({ id: Date.now(), date: new Date().toLocaleDateString(), item: item, amount: amount, photo: tempPhotoBase64 });
             localStorage.setItem('travelApp_expenses', JSON.stringify(expenses));
-            
-            // Reset form
             document.getElementById('expenseItem').value = '';
             document.getElementById('expenseAmount').value = '';
-            document.getElementById('photoFileName').innerText = '未选择';
-            document.getElementById('photoFileName').classList.add('text-gray-400');
-            document.getElementById('photoFileName').classList.remove('text-doraBlue', 'font-bold');
+            document.getElementById('photoStatusText').innerText = '1. 拍收据';
+            document.getElementById('photoStatusText').classList.remove('text-green-600', 'font-bold');
             tempPhotoBase64 = null;
-
             renderExpenses();
         }
 
@@ -742,241 +896,113 @@
             const expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
             const listContainer = document.getElementById('expenseList');
             const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
-            
             let html = '';
             let totalJpy = 0;
-
-            // Sort newest first
             expenses.slice().reverse().forEach(exp => {
                 totalJpy += exp.amount;
                 const myr = (exp.amount / 100) * rate;
-                
-                const photoHtml = exp.photo 
-                    ? `<img src="${exp.photo}" class="receipt-thumb ml-3 shadow-sm" onclick="viewPhoto('${exp.photo}')">` 
-                    : '';
-
-                html += `
-                    <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-center flex-1">
-                            <div>
-                                <div class="font-bold text-gray-800">${exp.item}</div>
-                                <div class="text-xs text-gray-400">${exp.date}</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-bold text-doraBlue">¥${exp.amount.toLocaleString()}</div>
-                            <div class="text-xs text-gray-500 font-mono">≈ RM ${myr.toFixed(1)}</div>
-                        </div>
-                        ${photoHtml}
-                        <button onclick="deleteExpense(${exp.id})" class="ml-3 text-gray-300 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 transition"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
+                const photoHtml = exp.photo ? `<img src="${exp.photo}" class="w-14 h-14 object-cover rounded ml-3" onclick="viewPhoto('${exp.photo}')">` : '';
+                html += `<div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100"><div class="flex-1"><div class="font-bold text-gray-800 text-lg">${exp.item}</div><div class="text-sm text-gray-400">${exp.date}</div></div><div class="text-right"><div class="font-bold text-doraBlue text-lg">¥${exp.amount.toLocaleString()}</div><div class="text-sm text-gray-500">RM ${myr.toFixed(1)}</div></div>${photoHtml}<button onclick="deleteExpense(${exp.id})" class="ml-4 text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-trash"></i></button></div>`;
             });
-
-            listContainer.innerHTML = html || '<div class="text-center text-gray-400 py-6 border-2 border-dashed border-gray-200 rounded-lg">尚无记录，快去消费吧！</div>';
-            
+            listContainer.innerHTML = html || '<div class="text-center text-gray-400 py-8 text-lg">尚无记录</div>';
             const totalMyr = (totalJpy / 100) * rate;
             document.getElementById('totalJpy').innerText = `¥${totalJpy.toLocaleString()}`;
             document.getElementById('totalMyr').innerText = `RM ${totalMyr.toFixed(2)}`;
-
             updateChart(expenses);
         }
 
         function deleteExpense(id) {
-            if(!confirm("确定删除此笔记录？")) return;
+            if(!confirm("确定删除？")) return;
             let expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
             expenses = expenses.filter(e => e.id !== id);
             localStorage.setItem('travelApp_expenses', JSON.stringify(expenses));
             renderExpenses();
         }
-
         function clearExpenses() {
-            if(confirm("确定清除所有记账资料？(无法复原)")) {
-                localStorage.removeItem('travelApp_expenses');
-                renderExpenses();
-            }
+            if(confirm("确定清除所有记录？")) { localStorage.removeItem('travelApp_expenses'); renderExpenses(); }
         }
-
         function viewPhoto(base64) {
             const w = window.open("");
             w.document.write(`<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#333"><img src="${base64}" style="max-width:100%;max-height:100%"></div>`);
         }
 
-        // --- CHART JS ---
         function updateChart(expenses) {
             const ctx = document.getElementById('expenseChart').getContext('2d');
-            
             let sorted = expenses.slice().sort((a,b) => b.amount - a.amount);
-            let labels = [];
-            let data = [];
-            
+            let labels = [], data = [];
             if (sorted.length > 5) {
-                let top5 = sorted.slice(0, 5);
-                let others = sorted.slice(5);
-                
-                top5.forEach(e => { labels.push(e.item); data.push(e.amount); });
-                
-                let otherTotal = others.reduce((sum, e) => sum + e.amount, 0);
-                labels.push("其他");
-                data.push(otherTotal);
-            } else {
-                sorted.forEach(e => { labels.push(e.item); data.push(e.amount); });
-            }
-
+                sorted.slice(0, 5).forEach(e => { labels.push(e.item); data.push(e.amount); });
+                labels.push("其他"); data.push(sorted.slice(5).reduce((sum, e) => sum + e.amount, 0));
+            } else { sorted.forEach(e => { labels.push(e.item); data.push(e.amount); }); }
             if(expenseChartInstance) expenseChartInstance.destroy();
-
-            expenseChartInstance = new Chart(ctx, {
-                type: 'doughnut', // Changed to Doughnut for variety
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '支出 (JPY)',
-                        data: data,
-                        backgroundColor: [
-                            '#0093D0', '#DD2F2F', '#F9CD1E', '#4CAF50', '#9C27B0', '#9E9E9E'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } }
-                    },
-                    cutout: '60%'
-                }
-            });
+            expenseChartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: labels, datasets: [{ data: data, backgroundColor: ['#0093D0', '#DD2F2F', '#F9CD1E', '#4CAF50', '#9C27B0', '#9E9E9E'], borderWidth: 2, borderColor: '#ffffff' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 14, font: { size: 14 } } } }, cutout: '60%' } });
         }
 
-        // --- LISTS LOGIC ---
-        function initLists() {
-            renderChecklist();
-            renderMemos();
-        }
-
+        function initLists() { renderChecklist(); renderMemos(); }
         function switchListTab(tab) {
-            if(tab === 'checklist') {
-                document.getElementById('view-checklist').classList.remove('hidden');
-                document.getElementById('view-memo').classList.add('hidden');
-                document.getElementById('tab-checklist').classList.add('bg-doraBlue', 'text-white', 'shadow-md');
-                document.getElementById('tab-checklist').classList.remove('text-gray-500');
-                document.getElementById('tab-memo').classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
-                document.getElementById('tab-memo').classList.add('text-gray-500');
-            } else {
-                document.getElementById('view-checklist').classList.add('hidden');
-                document.getElementById('view-memo').classList.remove('hidden');
-                document.getElementById('tab-memo').classList.add('bg-doraBlue', 'text-white', 'shadow-md');
-                document.getElementById('tab-memo').classList.remove('text-gray-500');
-                document.getElementById('tab-checklist').classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
-                document.getElementById('tab-checklist').classList.add('text-gray-500');
-            }
+            document.getElementById('view-checklist').classList.toggle('hidden', tab !== 'checklist');
+            document.getElementById('view-memo').classList.toggle('hidden', tab !== 'memo');
+            document.getElementById('tab-checklist').classList.toggle('bg-doraBlue', tab === 'checklist');
+            document.getElementById('tab-checklist').classList.toggle('text-white', tab === 'checklist');
+            document.getElementById('tab-checklist').classList.toggle('text-gray-500', tab !== 'checklist');
+            document.getElementById('tab-memo').classList.toggle('bg-doraBlue', tab === 'memo');
+            document.getElementById('tab-memo').classList.toggle('text-white', tab === 'memo');
+            document.getElementById('tab-memo').classList.toggle('text-gray-500', tab !== 'memo');
         }
-
-        // Checklist
         function renderChecklist() {
             let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
-            if(!items) {
-                items = defaultChecklist;
-                localStorage.setItem('travelApp_checklist', JSON.stringify(items));
-            }
-
-            const container = document.getElementById('checklistContainer');
+            if(!items) { items = defaultChecklist; localStorage.setItem('travelApp_checklist', JSON.stringify(items)); }
             let html = '';
-            
             items.forEach((item, index) => {
-                const strikeClass = item.done ? 'line-through text-gray-400' : 'text-gray-800';
-                const checkState = item.done ? 'checked' : '';
-                const bgClass = item.done ? 'bg-gray-100' : 'bg-white border border-gray-200';
-                
-                html += `
-                    <li class="flex items-center p-3 rounded-lg ${bgClass} shadow-sm transition-all">
-                        <input type="checkbox" ${checkState} onchange="toggleCheck(${index})" class="w-5 h-5 text-doraBlue rounded focus:ring-doraBlue mr-3 cursor-pointer">
-                        <span class="flex-1 ${strikeClass} font-medium">${item.text}</span>
-                        <button onclick="deleteCheck(${index})" class="text-gray-300 hover:text-red-500 w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
-                    </li>
-                `;
+                html += `<li class="flex items-center p-4 rounded-xl ${item.done ? 'bg-gray-100' : 'bg-white border border-gray-200'} mb-3"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCheck(${index})" class="w-6 h-6 text-doraBlue mr-4"><span class="flex-1 text-lg ${item.done ? 'line-through text-gray-400' : ''}">${item.text}</span><button onclick="deleteCheck(${index})" class="text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></li>`;
             });
-            container.innerHTML = html;
+            document.getElementById('checklistContainer').innerHTML = html;
         }
-
         function toggleCheck(index) {
             let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
             items[index].done = !items[index].done;
             localStorage.setItem('travelApp_checklist', JSON.stringify(items));
             renderChecklist();
         }
-
         function addCheckItem() {
-            const input = document.getElementById('newCheckItem');
-            const text = input.value.trim();
-            if(!text) return;
-            
+            const val = document.getElementById('newCheckItem').value.trim();
+            if(!val) return;
             let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
-            items.push({ text: text, done: false });
+            items.push({text: val, done: false});
             localStorage.setItem('travelApp_checklist', JSON.stringify(items));
-            
-            input.value = '';
+            document.getElementById('newCheckItem').value = '';
             renderChecklist();
         }
-
-        function deleteCheck(index) {
+        function deleteCheck(i) {
             let items = JSON.parse(localStorage.getItem('travelApp_checklist'));
-            items.splice(index, 1);
+            items.splice(i, 1);
             localStorage.setItem('travelApp_checklist', JSON.stringify(items));
             renderChecklist();
         }
-
-        // Memos
         function renderMemos() {
             const memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
-            const container = document.getElementById('memoContainer');
             let html = '';
-
             memos.reverse().forEach((memo, index) => {
-                let content = memo.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-doraBlue underline break-all font-bold"><i class="fa-solid fa-link"></i> 链接</a>');
-                content = content.replace(/\n/g, '<br>');
-
-                html += `
-                    <div class="bg-yellow-50 border-l-4 border-doraYellow p-3 rounded-r-lg relative group shadow-sm hover:shadow-md transition">
-                        <div class="text-sm text-gray-700 leading-relaxed font-sans">${content}</div>
-                        <div class="text-[10px] text-gray-400 mt-2 text-right border-t border-yellow-200 pt-1 flex justify-between items-center">
-                            <span><i class="fa-regular fa-clock mr-1"></i>${memo.date}</span>
-                            <button onclick="deleteMemo(${memos.length - 1 - index})" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
+                html += `<div class="bg-yellow-50 border-l-4 border-doraYellow p-4 rounded-r-xl mb-3 relative group"><div class="text-base text-gray-700 leading-relaxed">${memo.text.replace(/\n/g, '<br>')}</div><div class="text-xs text-gray-400 mt-2 text-right flex justify-between"><span>${memo.date}</span><button onclick="deleteMemo(${memos.length - 1 - index})"><i class="fa-solid fa-trash text-gray-300 hover:text-red-500 text-lg"></i></button></div></div>`;
             });
-
-            container.innerHTML = html || '<div class="text-center text-gray-400 text-sm mt-4 italic">还没有笔记，把想去的地方记下来吧！</div>';
+            document.getElementById('memoContainer').innerHTML = html || '<div class="text-center text-gray-400 text-lg mt-6">无笔记</div>';
         }
-
         function addMemo() {
-            const input = document.getElementById('newMemoContent');
-            const text = input.value.trim();
-            if(!text) return;
-
+            const val = document.getElementById('newMemoContent').value.trim();
+            if(!val) return;
             let memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
-            memos.push({
-                text: text,
-                date: new Date().toLocaleString('zh-CN', { hour12: false, month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })
-            });
+            memos.push({text: val, date: new Date().toLocaleString()});
             localStorage.setItem('travelApp_memos', JSON.stringify(memos));
-            
-            input.value = '';
+            document.getElementById('newMemoContent').value = '';
             renderMemos();
         }
-
-        function deleteMemo(originalIndex) {
-            if(!confirm("删除此笔记？")) return;
+        function deleteMemo(i) {
+            if(!confirm("删除笔记？")) return;
             let memos = JSON.parse(localStorage.getItem('travelApp_memos') || '[]');
-            memos.splice(originalIndex, 1);
+            memos.splice(i, 1);
             localStorage.setItem('travelApp_memos', JSON.stringify(memos));
             renderMemos();
         }
-
     </script>
 </body>
 </html>
