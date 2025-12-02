@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + Mobile Optimized + Layout Fixed + Cache Cleared -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated (USJ App added) -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <!-- Viewport optimized for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>哆啦A梦的日本旅游百宝袋 (2025新版)</title>
+    <title>哆啦A梦的日本旅游百宝袋 (最终完整版)</title>
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
@@ -163,40 +163,6 @@
             font-size: 40px;
             cursor: pointer;
             z-index: 2001;
-        }
-        
-        /* FIX: Ensure Timeline layout handles text wrapping */
-        .timeline-time {
-            width: 4rem; /* Fixed width */
-            text-align: right;
-            margin-right: 1.5rem; /* Gap between time and line */
-            flex-shrink: 0;
-            font-weight: 700;
-            color: #9CA3AF;
-            padding-top: 0.25rem;
-            font-size: 0.875rem;
-        }
-        .timeline-content {
-            flex: 1;
-            padding-bottom: 1.5rem;
-            border-left: 2px dashed #E5E7EB;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-        .timeline-content:last-child {
-            border-left: none;
-            padding-bottom: 0;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: -0.45rem; /* Center the dot on the line */
-            top: 0.4rem;
-            width: 0.75rem;
-            height: 0.75rem;
-            border-radius: 9999px;
-            background-color: white;
-            border: 2px solid #9CA3AF;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -532,6 +498,7 @@
             <div class="dora-card p-5 mb-8 relative">
                 <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
                 <div class="grid grid-cols-1 gap-4">
+                    <!-- Vertical stack for inputs to prevent overlap -->
                     <div class="flex flex-col gap-3 mt-2">
                         <input type="text" id="expenseItem" placeholder="品项名称" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
                         <input type="number" id="expenseAmount" placeholder="日元金额" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
@@ -597,26 +564,35 @@
         <section id="info" class="view-section">
             <h2 class="text-3xl font-bold text-doraBlue mb-8 text-center">旅游小帮手</h2>
             <div class="grid grid-cols-2 gap-5">
+                <!-- Weather -->
                 <a href="https://www.jma.go.jp/bosai/forecast/" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center group hover:border-doraBlue transition">
                     <i class="fa-solid fa-cloud-sun text-5xl text-doraBlue mb-3 group-hover:scale-110 transition"></i>
                     <span class="font-bold text-lg text-gray-700">天气预报</span>
                 </a>
+                
+                <!-- Emergency -->
                 <div class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center bg-red-50 border-doraRed">
                     <i class="fa-solid fa-truck-medical text-4xl text-doraRed mb-3 animate-pulse"></i>
                     <span class="font-bold text-lg text-doraRed">紧急电话</span>
                     <span class="text-base font-bold text-doraRed mt-1">110 / 119</span>
                 </div>
+
+                <!-- Embassy -->
                 <a href="https://www.kln.gov.my/web/jpn_tokyo/home" target="_blank" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center group hover:border-doraDark transition">
                     <i class="fa-solid fa-building-flag text-5xl text-doraDark mb-3 group-hover:scale-110 transition"></i>
                     <span class="font-bold text-lg text-gray-700">办事处</span>
                     <span class="text-sm text-gray-500 mt-1">大马驻日使馆</span>
                 </a>
+
+                <!-- Hotel Info -->
                 <div onclick="alert('京都花开酒店: 075-123-4567\nMinn十三: 06-123-4567\n关西机场奥德西斯: 072-458-0000')" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center cursor-pointer hover:bg-yellow-50 transition">
                     <i class="fa-solid fa-hotel text-5xl text-doraYellow mb-3 drop-shadow-sm"></i>
                     <span class="font-bold text-lg text-gray-700">住宿电话</span>
                     <span class="text-sm text-gray-400 mt-1">点击查看</span>
                 </div>
             </div>
+
+             <!-- Rules Card -->
              <div class="dora-card p-6 mt-8 border-l-8 border-gray-400">
                 <h3 class="font-bold text-doraDark text-lg mb-4 border-b pb-3 flex items-center">
                     <i class="fa-solid fa-triangle-exclamation text-doraYellow mr-3"></i>注意事项
@@ -728,10 +704,11 @@
             ]}
         ];
 
-        // Default Checklist - v3 to force cache clear
+        // Default Checklist - v4 to force cache clear again for USJ App
         const defaultChecklist = [
             { text: "护照", done: false },
             { text: "Visit Japan Web 填写", done: false },
+            { text: "下载环球影城 App", done: false }, // Added new item
             { text: "日元现金 & 信用卡", done: false },
             { text: "充电宝", done: false },
             { text: "充电线", done: false },
@@ -766,7 +743,7 @@
             window.scrollTo(0,0);
         }
 
-        // Timeline Logic
+        // Fixed renderTimeline logic to prevent overlapping
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             let html = '';
@@ -829,6 +806,8 @@
         function updateCalc() {
             const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
             localStorage.setItem('travelApp_rate', rate);
+            
+            // Restored Logic
             const input = document.getElementById('calcInput');
             const result = document.getElementById('calcResult');
             if(input && result) {
@@ -925,13 +904,13 @@
 
         function initLists() { renderChecklist(); renderMemos(); }
         
-        // Checklist Logic with Cache Buster V3
+        // Checklist Logic with Cache Buster V4
         function renderChecklist() {
-            // Updated key name to force refresh
-            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v3'));
+            // Updated key name to force refresh again (v4)
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v4'));
             if(!items) { 
                 items = defaultChecklist; 
-                localStorage.setItem('travelApp_checklist_v3', JSON.stringify(items)); 
+                localStorage.setItem('travelApp_checklist_v4', JSON.stringify(items)); 
             }
             let html = '';
             items.forEach((item, index) => {
@@ -940,25 +919,25 @@
             document.getElementById('checklistContainer').innerHTML = html;
         }
         function toggleCheck(index) {
-            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v3'));
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v4'));
             items[index].done = !items[index].done;
-            localStorage.setItem('travelApp_checklist_v3', JSON.stringify(items));
+            localStorage.setItem('travelApp_checklist_v4', JSON.stringify(items));
             renderChecklist();
         }
         function addCheckItem() {
             const input = document.getElementById('newCheckItem');
             const val = input.value.trim();
             if(!val) return;
-            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v3')) || [];
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v4')) || [];
             items.push({text: val, done: false});
-            localStorage.setItem('travelApp_checklist_v3', JSON.stringify(items));
+            localStorage.setItem('travelApp_checklist_v4', JSON.stringify(items));
             input.value = '';
             renderChecklist();
         }
         function deleteCheck(i) {
-            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v3'));
+            let items = JSON.parse(localStorage.getItem('travelApp_checklist_v4'));
             items.splice(i, 1);
-            localStorage.setItem('travelApp_checklist_v3', JSON.stringify(items));
+            localStorage.setItem('travelApp_checklist_v4', JSON.stringify(items));
             renderChecklist();
         }
         
