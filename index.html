@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated + Map Added -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <!-- Viewport optimized for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>哆啦A梦的日本旅游百宝袋 (最终修复版)</title>
+    <title>哆啦A梦的日本旅游百宝袋 (最终地图版)</title>
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="apple-touch-icon.jpeg">
@@ -168,13 +168,25 @@
 
         <!-- ==================== PLAN SECTION ==================== -->
         <section id="plan" class="view-section active">
-            <div class="dora-card p-5 border-l-8 border-doraRed flex items-center justify-between">
+            <!-- Intro Card -->
+            <div class="dora-card p-5 border-l-8 border-doraRed flex items-center justify-between mb-6">
                 <div>
                     <h2 class="text-2xl font-bold text-doraBlue mb-1"><i class="fa-solid fa-torii-gate mr-2 text-doraRed"></i>行程概览</h2>
                     <p class="text-sm text-gray-500">9 天 8 夜 关西深度游</p>
                 </div>
                 <div class="text-5xl opacity-20 transform rotate-12">🏯</div>
             </div>
+
+            <!-- Map Image Insertion -->
+            <div class="mb-8 rounded-2xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.15)] border-4 border-white relative group transform transition hover:scale-[1.01] duration-300">
+                <img src="日本旅游地图.png" alt="哆啦A梦日本关西之旅手绘地图" class="w-full h-auto object-cover bg-blue-50" onerror="this.src='https://placehold.co/600x350/e0f7ff/0093d0?text=请放置图片文件:\n日本旅游地图.png';this.style.objectFit='contain';this.style.padding='20px'">
+                <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
+                    <p class="text-white text-xs font-bold text-center flex items-center justify-center">
+                        <i class="fa-solid fa-map mr-2"></i> 9天8夜 关西大冒险路线图
+                    </p>
+                </div>
+            </div>
+
             <div id="timeline-container" class="space-y-6"></div>
         </section>
 
@@ -449,6 +461,7 @@
             <div class="dora-card p-5 mb-8 relative">
                 <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
                 <div class="grid grid-cols-1 gap-4">
+                    <!-- Vertical stack for inputs to prevent overlap -->
                     <div class="flex flex-col gap-3 mt-2">
                         <input type="text" id="expenseItem" placeholder="品项名称" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
                         <input type="number" id="expenseAmount" placeholder="日元金额" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
@@ -645,7 +658,7 @@
             ]}
         ];
 
-        // Default Checklist
+        // Default Checklist (Final Version)
         const defaultChecklist = [
             { text: "护照", done: false },
             { text: "Visit Japan Web 填写", done: false },
