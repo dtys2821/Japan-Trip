@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated (USJ App added) -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated (USJ App added) + Bug Fix -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -498,7 +498,6 @@
             <div class="dora-card p-5 mb-8 relative">
                 <h3 class="font-bold text-doraRed text-xl mb-4 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i>新增支出</h3>
                 <div class="grid grid-cols-1 gap-4">
-                    <!-- Vertical stack for inputs to prevent overlap -->
                     <div class="flex flex-col gap-3 mt-2">
                         <input type="text" id="expenseItem" placeholder="品项名称" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
                         <input type="number" id="expenseAmount" placeholder="日元金额" class="w-full border-2 border-gray-200 rounded-xl p-3 text-base focus:border-doraBlue outline-none bg-gray-50 transition-colors">
@@ -585,7 +584,7 @@
                 </a>
 
                 <!-- Hotel Info -->
-                <div onclick="alert('京都花开酒店: 075-123-4567\nMinn十三: 06-123-4567\n关西机场奥德西斯: 072-458-0000')" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center cursor-pointer hover:bg-yellow-50 transition">
+                <div onclick="alert('梅小路皇家花园酒店: 075-123-4567\nMinn十三: 06-123-4567\n关西机场奥德西斯: 072-458-0000')" class="dora-card p-4 flex flex-col items-center justify-center h-40 text-center cursor-pointer hover:bg-yellow-50 transition">
                     <i class="fa-solid fa-hotel text-5xl text-doraYellow mb-3 drop-shadow-sm"></i>
                     <span class="font-bold text-lg text-gray-700">住宿电话</span>
                     <span class="text-sm text-gray-400 mt-1">点击查看</span>
@@ -679,20 +678,20 @@
                 { time: "下午", text: "天王寺区域逛街", type: "shop" },
                 { time: "傍晚", text: "阿倍野 HARUKAS 300 展望台", type: "spot", link: "Harukas 300" }
             ]},
-            { date: "1/26", day: "五", title: "移动至京都", hotel: "京都花开酒店", color: "border-pink-500", events: [
+            { date: "1/26", day: "五", title: "移动至京都", hotel: "梅小路皇家花园酒店", color: "border-pink-500", events: [
                 { time: "上午", text: "退房 -> JR新快速 -> 京都站", type: "move" },
-                { time: "中午", text: "打车至京都花开酒店", type: "move" },
+                { time: "中午", text: "打车至梅小路皇家花园酒店", type: "move" },
                 { time: "下午", text: "伏见稻荷大社 (千本鸟居)", type: "spot", link: "Fushimi Inari Taisha" },
                 { time: "参观", text: "三十三间堂 (国宝)", type: "spot", link: "Sanjusangendo Temple" },
                 { time: "晚上", text: "鸭川散步 & 先斗町晚餐", type: "food", link: "Pontocho Alley" }
             ]},
-            { date: "1/27", day: "六", title: "琵琶湖谷雪景", hotel: "京都花开酒店", color: "border-blue-400", events: [
+            { date: "1/27", day: "六", title: "琵琶湖谷雪景", hotel: "梅小路皇家花园酒店", color: "border-blue-400", events: [
                 { time: "上午", text: "京都站 -> 志贺站 -> 巴士", type: "move" },
                 { time: "全天", text: "琵琶湖谷 (Biwako Valley)", type: "play", link: "Biwako Valley" },
                 { time: "体验", text: "琵琶湖平台绝景 & 玩雪", type: "play" },
                 { time: "晚上", text: "返回京都站拉面小路", type: "food" }
             ]},
-            { date: "1/28", day: "日", title: "和服古都梦华录", hotel: "京都花开酒店", color: "border-doraRed", events: [
+            { date: "1/28", day: "日", title: "和服古都梦华录", hotel: "梅小路皇家花园酒店", color: "border-doraRed", events: [
                 { time: "上午", text: "祇园和服店换装", type: "spot" },
                 { time: "路线", text: "八坂神社 -> 二年坂 -> 三年坂", type: "walk", link: "Ninenzaka" },
                 { time: "下午", text: "清水寺 & 清水舞台", type: "spot", link: "Kiyomizu-dera" },
@@ -904,6 +903,27 @@
 
         function initLists() { renderChecklist(); renderMemos(); }
         
+        function switchListTab(tab) {
+            document.getElementById('view-checklist').classList.toggle('hidden', tab !== 'checklist');
+            document.getElementById('view-memo').classList.toggle('hidden', tab !== 'memo');
+            
+            // Tab Styles
+            const checklistBtn = document.getElementById('tab-checklist');
+            const memoBtn = document.getElementById('tab-memo');
+            
+            if(tab === 'checklist') {
+                checklistBtn.classList.add('bg-doraBlue', 'text-white', 'shadow-md');
+                checklistBtn.classList.remove('text-gray-500');
+                memoBtn.classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
+                memoBtn.classList.add('text-gray-500');
+            } else {
+                memoBtn.classList.add('bg-doraBlue', 'text-white', 'shadow-md');
+                memoBtn.classList.remove('text-gray-500');
+                checklistBtn.classList.remove('bg-doraBlue', 'text-white', 'shadow-md');
+                checklistBtn.classList.add('text-gray-500');
+            }
+        }
+
         // Checklist Logic with Cache Buster V4
         function renderChecklist() {
             // Updated key name to force refresh again (v4)
