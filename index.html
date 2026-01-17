@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated (USJ App added) + Bug Fix -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + New Itinerary + No AI + Mobile Optimized + Rich Content + Calculator Restored + Checklist Updated + Bug Fix + Rate Base 1000 -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -477,9 +477,9 @@
             <div class="dora-card p-5 mb-6 bg-gradient-to-r from-blue-50 to-white">
                 <h3 class="font-bold text-doraBlue mb-4 text-xl"><i class="fa-solid fa-calculator mr-2"></i>汇率计算器</h3>
                 <div class="flex items-center justify-between mb-4">
-                    <label class="text-base text-gray-600 font-bold">汇率 (100日元):</label>
+                    <label class="text-base text-gray-600 font-bold">汇率 (1000日元):</label>
                     <div class="flex items-center border-b-2 border-doraBlue pb-1">
-                        <input type="number" id="exchangeRate" value="2.70" class="w-16 text-center font-bold text-doraRed text-xl bg-transparent outline-none" onchange="updateCalc()">
+                        <input type="number" id="exchangeRate" value="27.00" class="w-20 text-center font-bold text-doraRed text-xl bg-transparent outline-none" onchange="updateCalc()">
                         <span class="text-sm font-bold ml-1 text-doraDark">MYR</span>
                     </div>
                 </div>
@@ -811,7 +811,7 @@
             const result = document.getElementById('calcResult');
             if(input && result) {
                 const jpy = parseFloat(input.value) || 0;
-                const myr = (jpy / 100) * rate;
+                const myr = (jpy / 1000) * rate;
                 result.innerText = `RM ${myr.toFixed(2)}`;
             }
         }
@@ -863,12 +863,12 @@
             let totalJpy = 0;
             expenses.slice().reverse().forEach(exp => {
                 totalJpy += exp.amount;
-                const myr = (exp.amount / 100) * rate;
+                const myr = (exp.amount / 1000) * rate;
                 const photoHtml = exp.photo ? `<img src="${exp.photo}" class="w-14 h-14 object-cover rounded ml-3" onclick="viewPhoto('${exp.photo}')">` : '';
                 html += `<div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100"><div class="flex-1 min-w-0"><div class="font-bold text-gray-800 text-lg truncate">${exp.item}</div><div class="text-sm text-gray-400">${exp.date}</div></div><div class="text-right flex-shrink-0 ml-2"><div class="font-bold text-doraBlue text-lg">¥${exp.amount.toLocaleString()}</div><div class="text-sm text-gray-500">RM ${myr.toFixed(1)}</div></div>${photoHtml}<button onclick="deleteExpense(${exp.id})" class="ml-4 text-gray-300 hover:text-red-500 text-xl"><i class="fa-solid fa-trash"></i></button></div>`;
             });
             listContainer.innerHTML = html || '<div class="text-center text-gray-400 py-8 text-lg">尚无记录</div>';
-            const totalMyr = (totalJpy / 100) * rate;
+            const totalMyr = (totalJpy / 1000) * rate;
             document.getElementById('totalJpy').innerText = `¥${totalJpy.toLocaleString()}`;
             document.getElementById('totalMyr').innerText = `RM ${totalMyr.toFixed(2)}`;
             updateChart(expenses);
