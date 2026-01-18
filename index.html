@@ -787,7 +787,8 @@
 
         let expenseChartInstance = null;
         function initWallet() {
-            const savedRate = localStorage.getItem('travelApp_rate');
+            // Changed storage key to force update to new rate
+            const savedRate = localStorage.getItem('travelApp_rate_2026');
             if(savedRate) document.getElementById('exchangeRate').value = savedRate;
             renderExpenses();
             
@@ -801,7 +802,8 @@
 
         function updateCalc() {
             const rate = parseFloat(document.getElementById('exchangeRate').value) || 26.00;
-            localStorage.setItem('travelApp_rate', rate);
+            // Updated storage key
+            localStorage.setItem('travelApp_rate_2026', rate);
             
             // Restored Logic
             const input = document.getElementById('calcInput');
