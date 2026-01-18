@@ -1,4 +1,4 @@
-<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + Updated Itinerary V4 (2026 Logic) + Mobile Optimized + Rich Content -->
+<!-- Chosen Palette: Doraemon Theme + Japanese Traditional + Updated Itinerary V4 (2026 Logic) + Mobile Optimized + Rich Content + Exchange Rate Update -->
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -437,7 +437,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <label class="text-base text-gray-600 font-bold">汇率 (1000日元):</label>
                     <div class="flex items-center border-b-2 border-doraBlue pb-1">
-                        <input type="number" id="exchangeRate" value="27.00" class="w-20 text-center font-bold text-doraRed text-xl bg-transparent outline-none" onchange="updateCalc()">
+                        <input type="number" id="exchangeRate" value="26.00" class="w-20 text-center font-bold text-doraRed text-xl bg-transparent outline-none" onchange="updateCalc()">
                         <span class="text-sm font-bold ml-1 text-doraDark">MYR</span>
                     </div>
                 </div>
@@ -800,7 +800,7 @@
         }
 
         function updateCalc() {
-            const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
+            const rate = parseFloat(document.getElementById('exchangeRate').value) || 26.00;
             localStorage.setItem('travelApp_rate', rate);
             
             // Restored Logic
@@ -855,7 +855,7 @@
         function renderExpenses() {
             const expenses = JSON.parse(localStorage.getItem('travelApp_expenses') || '[]');
             const listContainer = document.getElementById('expenseList');
-            const rate = parseFloat(document.getElementById('exchangeRate').value) || 2.70;
+            const rate = parseFloat(document.getElementById('exchangeRate').value) || 26.00;
             let html = '';
             let totalJpy = 0;
             expenses.slice().reverse().forEach(exp => {
